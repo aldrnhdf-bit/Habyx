@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Habyx Activity Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #f0f4ff;
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+.header-left h1 { font-size: 26px; font-weight: 700; color: #1e293b; }
+.header-left p { font-size: 13px; color: #64748b; margin-top: 2px; }
+
+.welcome-badge {
+    background: white; border-radius: 50px;
+    padding: 8px 16px; display: flex; align-items: center;
+    gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.welcome-badge span { font-size: 13px; color: #64748b; }
+.welcome-badge strong { font-size: 14px; color: #1e293b; display: block; }
+.avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 13px; font-weight: 700;
+}
+
+/* XP PROGRESS CARD */
+.xp-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+/* DONUT */
+.donut-wrap {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+}
+.donut-wrap svg { width: 90px; height: 90px; transform: rotate(-90deg); }
+.donut-bg { fill: none; stroke: #e2e8f0; stroke-width: 9; }
+.donut-fill {
+    fill: none; stroke: url(#donutGrad); stroke-width: 9;
+    stroke-linecap: round;
+    stroke-dasharray: 220;
+    stroke-dashoffset: 220;
+    transition: stroke-dashoffset 0.6s ease;
+}
+.donut-label {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.donut-pct { font-size: 16px; font-weight: 700; color: #1e293b; }
+.donut-sub { font-size: 9px; color: #94a3b8; }
+
+.xp-info { flex: 1; }
+.xp-info h2 { font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+.xp-info p { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+.xp-bar-wrap { }
+.xp-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: #94a3b8; margin-bottom: 5px;
+}
+.xp-bar { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+.xp-bar-fill {
+    height: 100%; width: 81%;
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    border-radius: 10px;
+}
+
+.xp-stats { display: flex; gap: 20px; margin-left: auto; }
+.xp-stat { text-align: center; }
+.xp-stat .val { font-size: 22px; font-weight: 700; color: #1e293b; }
+.xp-stat .lbl { font-size: 11px; color: #94a3b8; }
+.xp-stat-accent { height: 3px; width: 24px; border-radius: 4px; margin: 0 auto 6px; }
+
+/* MAIN LAYOUT */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items: start;
+}
+
+/* CATEGORIES */
+.categories-card {
+    background: white; border-radius: 20px;
+    padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+}
+.section-label {
+    font-size: 12px; font-weight: 600; color: #94a3b8;
+    letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px;
+}
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.cat-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: #1e293b;
+    display: block;
+}
+.cat-card:hover {
+    border-color: #93c5fd;
+    background: #eff6ff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(59,130,246,0.12);
+}
+.cat-icon { font-size: 2rem; margin-bottom: 8px; }
+.cat-name { font-size: 13px; font-weight: 600; color: #334155; }
+.cat-xp { font-size: 11px; color: #3b82f6; margin-top: 3px; }
+
+/* TODAY'S HABITS inline card */
+.habits-card {
+    background: white; border-radius: 20px;
+    padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.habits-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+}
+.habits-header h3 { font-size: 16px; font-weight: 700; color: #1e293b; }
+.habits-count {
+    font-size: 12px; font-weight: 700;
+    background: #eff6ff; color: #3b82f6;
+    padding: 3px 12px; border-radius: 20px;
+}
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+/* AI CARD */
+.ai-card {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 20px; padding: 20px; color: white;
+}
+.ai-badge {
+    font-size: 10px; font-weight: 700;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 10px; border-radius: 20px;
+    margin-bottom: 8px; display: inline-block; letter-spacing: 0.5px;
+}
+.ai-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.ai-card p { font-size: 12px; opacity: 0.85; line-height: 1.6; }
+
+/* FEED CARD */
+.feed-card {
+    background: white; border-radius: 20px;
+    padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.feed-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+}
+.feed-header h3 { font-size: 15px; font-weight: 700; color: #1e293b; }
+.live-dot {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: #22c55e; font-weight: 600;
+}
+.live-dot::before {
+    content: '';
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.feed-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; background: #f8fafc;
+    border-radius: 10px; margin-bottom: 8px;
+    border: 1.5px solid #e2e8f0;
+    transition: border-color 0.2s;
+}
+.feed-item:hover { border-color: #bfdbfe; }
+.feed-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin-top: 5px; flex-shrink: 0;
+}
+.feed-type { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.feed-text { font-size: 12px; color: #64748b; }
+.empty-feed { text-align: center; padding: 20px 0; color: #cbd5e1; font-size: 13px; }
+.empty-feed .icon { font-size: 28px; margin-bottom: 8px; }
+
+/* STREAK & BADGES */
+.mini-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.mini-card {
+    background: white; border-radius: 16px;
+    padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    text-align: center;
+}
+.mini-card .m-val { font-size: 28px; font-weight: 700; color: #1e293b; }
+.mini-card .m-lbl { font-size: 12px; color: #94a3b8; }
+.mini-accent { height: 3px; width: 24px; border-radius: 4px; margin: 0 auto 8px; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-left">
+        <h1>Habyx Activity Hub</h1>
+        <p>Track every habit, every day</p>
+    </div>
+    <div class="welcome-badge">
+        <div><span>Welcome back</span><strong>Your Name</strong></div>
+        <div class="avatar">YN</div>
+    </div>
+</div>
+
+<!-- XP PROGRESS CARD -->
+<div class="xp-card">
+    <div class="donut-wrap">
+        <svg viewBox="0 0 90 90">
+            <defs>
+                <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#3b82f6"/>
+                    <stop offset="100%" style="stop-color:#6366f1"/>
+                </linearGradient>
+            </defs>
+            <circle class="donut-bg" cx="45" cy="45" r="35"/>
+            <circle class="donut-fill" id="donutFill" cx="45" cy="45" r="35"/>
+        </svg>
+        <div class="donut-label">
+            <div class="donut-pct">81%</div>
+            <div class="donut-sub">TO LVL 8</div>
+        </div>
+    </div>
+
+    <div class="xp-info">
+        <h2>Level 7</h2>
+        <p>570 XP until Level 8</p>
+        <div class="xp-bar-wrap">
+            <div class="xp-bar-label">
+                <span>XP Progress</span>
+                <span>2,430 / 3,000 XP</span>
+            </div>
+            <div class="xp-bar"><div class="xp-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <div class="xp-stats">
+        <div class="xp-stat">
+            <div class="mini-accent" style="background:#3b82f6"></div>
+            <div class="val">18</div>
+            <div class="lbl">Day Streak</div>
+        </div>
+        <div class="xp-stat">
+            <div class="mini-accent" style="background:#f59e0b"></div>
+            <div class="val">12</div>
+            <div class="lbl">Badges</div>
+        </div>
+        <div class="xp-stat">
+            <div class="mini-accent" style="background:#22c55e"></div>
+            <div class="val">2,430</div>
+            <div class="lbl">Total XP</div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-grid">
+<div>
+
+    <!-- CATEGORIES -->
+    <div class="categories-card" style="margin-bottom:16px">
+        <div class="section-label">Activity Categories</div>
+        <div class="cat-grid" id="catGrid">
+            {% for c in categories %}
+            <a class="cat-card" href="/{{ c.route }}">
+                <div class="cat-icon">{{ c.icon }}</div>
+                <div class="cat-name">{{ c.name }}</div>
+                <div class="cat-xp">+XP</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- TODAY'S HABITS -->
+    <div class="habits-card">
+        <div class="habits-header">
+            <h3>📋 Daily Plan — Today's Habits</h3>
+            <div class="habits-count" id="habitsCount">2 / 4</div>
+        </div>
+        <div id="habitsPreview">
+            <!-- populated by feed data or static for now -->
+            <div style="text-align:center;padding:20px;color:#cbd5e1;font-size:13px;">
+                <div style="font-size:28px;margin-bottom:8px">📋</div>
+                <p>Your saved habits will appear here</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <!-- AI COACH -->
+    <div class="ai-card">
+        <div class="ai-badge">✦ AI COACH</div>
+        <h3 id="ai-title">Best next habit: Stay Active!</h3>
+        <p id="ai-body">You finish health habits most consistently before noon. Try completing your next activity in the morning for an easy XP win.</p>
+    </div>
+
+    <!-- LIVE FEED -->
+    <div class="feed-card">
+        <div class="feed-header">
+            <h3>📊 Activity Feed</h3>
+            <div class="live-dot">LIVE</div>
+        </div>
+        <div id="feed">
+            <div class="empty-feed">
+                <div class="icon">📊</div>
+                <p>Loading your feed…</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+
+// Animate donut on load
+window.addEventListener('load', () => {
+    const circle = document.getElementById('donutFill');
+    const circumference = 2 * Math.PI * 35;
+    circle.style.strokeDasharray = circumference;
+    circle.style.strokeDashoffset = circumference;
+    setTimeout(() => {
+        circle.style.transition = 'stroke-dashoffset 1s ease';
+        circle.style.strokeDashoffset = circumference * (1 - 0.81);
+    }, 200);
+});
+
+// Color map for feed types
+const typeColors = {
+    Workout:   { color: '#3b82f6', bg: '#eff6ff' },
+    Nutrition: { color: '#22c55e', bg: '#f0fdf4' },
+    Hygiene:   { color: '#f59e0b', bg: '#fef3c7' },
+    Hydration: { color: '#06b6d4', bg: '#ecfeff' },
+    Cardio:    { color: '#6366f1', bg: '#ede9fe' },
+    default:   { color: '#94a3b8', bg: '#f8fafc' },
+};
+
+function loadDashboard() {
+    fetch("/get-dashboard")
+        .then(res => res.json())
+        .then(data => {
+            if (!data || data.length === 0) {
+                document.getElementById("feed").innerHTML = `
+                    <div class="empty-feed">
+                        <div class="icon">📊</div>
+                        <p>No activity yet.<br>Complete a habit to see it here!</p>
+                    </div>`;
+                return;
+            }
+
+            document.getElementById("feed").innerHTML = data.map(item => {
+                const style = typeColors[item.type] || typeColors.default;
+                return `
+                <div class="feed-item">
+                    <div class="feed-dot" style="background:${style.color}"></div>
+                    <div>
+                        <div class="feed-type" style="color:${style.color}">${item.type}</div>
+                        <div class="feed-text">${item.text}</div>
+                    </div>
+                </div>`;
+            }).join("");
+        })
+        .catch(() => {
+            document.getElementById("feed").innerHTML = `
+                <div class="empty-feed">
+                    <div class="icon">📊</div>
+                    <p>Feed unavailable</p>
+                </div>`;
+        });
+}
+
+loadDashboard();
+setInterval(loadDashboard, 3000);
+
+</script>
+</body>
+</html>

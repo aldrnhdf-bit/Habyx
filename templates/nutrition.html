@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nutrition Tracker</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4ff;
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.header h1 { font-size: 26px; font-weight: 700; color: #1e293b; }
+.header p { font-size: 13px; color: #64748b; margin-top: 2px; }
+
+.welcome-badge {
+    background: white;
+    border-radius: 50px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.welcome-badge span { font-size: 13px; color: #64748b; }
+.welcome-badge strong { font-size: 14px; color: #1e293b; display: block; }
+.avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 13px; font-weight: 700;
+}
+
+/* STATS ROW */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: white; border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.stat-accent { height: 3px; width: 32px; border-radius: 4px; margin-bottom: 10px; }
+.stat-card .label { font-size: 12px; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.5px; }
+.stat-card .value { font-size: 26px; font-weight: 700; color: #1e293b; }
+.stat-card .unit { font-size: 13px; color: #94a3b8; margin-left: 3px; }
+
+/* SEARCH BAR */
+.search-bar {
+    background: white;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.search-bar input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: border-color 0.2s;
+}
+.search-bar input:focus { border-color: #3b82f6; background: white; }
+.search-bar input::placeholder { color: #94a3b8; }
+.search-btn {
+    padding: 10px 22px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white; border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    transition: opacity 0.2s; white-space: nowrap;
+}
+.search-btn:hover { opacity: 0.9; }
+
+/* RESULTS */
+.results-section { margin-bottom: 24px; }
+.results-label {
+    font-size: 12px; font-weight: 600; color: #94a3b8;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    width: 210px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1.5px solid #e2e8f0;
+    transition: border-color 0.2s;
+}
+.card:hover { border-color: #bfdbfe; }
+.card h3 { font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 6px; line-height: 1.4; }
+.card .kcal {
+    font-size: 22px; font-weight: 700; color: #3b82f6;
+    margin-bottom: 12px;
+}
+.card .kcal span { font-size: 12px; color: #94a3b8; margin-left: 3px; }
+.card-btns { display: flex; flex-direction: column; gap: 6px; }
+.meal-btn {
+    padding: 7px 10px;
+    border: none; border-radius: 8px;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: opacity 0.2s;
+    color: white;
+}
+.meal-btn:hover { opacity: 0.85; }
+.btn-b { background: #f59e0b; }
+.btn-l { background: #3b82f6; }
+.btn-d { background: #6366f1; }
+
+/* MEAL SECTIONS */
+.meals-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.meal-box {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.meal-header h2 { font-size: 16px; font-weight: 700; color: #1e293b; }
+.total-badge {
+    font-size: 12px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px;
+}
+.total-b { background: #fef3c7; color: #d97706; }
+.total-l { background: #eff6ff; color: #3b82f6; }
+.total-d { background: #ede9fe; color: #6366f1; }
+
+.meal-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1.5px solid #e2e8f0;
+}
+.meal-item-left { font-size: 13px; font-weight: 500; color: #334155; }
+.meal-item-cal { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+.remove-btn {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #fee2e2; color: #ef4444;
+    border: none; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1; transition: background 0.2s;
+}
+.remove-btn:hover { background: #fecaca; }
+
+.empty-meal {
+    text-align: center; padding: 20px 0;
+    color: #cbd5e1; font-size: 13px;
+}
+.empty-meal .icon { font-size: 24px; margin-bottom: 6px; }
+
+/* AI CARD */
+.ai-card {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 20px; padding: 20px; color: white;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+}
+.ai-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+}
+.ai-badge {
+    font-size: 10px; font-weight: 700;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 10px; border-radius: 20px;
+    margin-bottom: 4px; display: inline-block; letter-spacing: 0.5px;
+}
+.ai-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.ai-card p { font-size: 12px; opacity: 0.85; line-height: 1.5; }
+
+/* LOADING */
+.loading {
+    text-align: center; padding: 30px;
+    color: #94a3b8; font-size: 14px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div>
+        <h1>🥗 Nutrition Tracker</h1>
+        <p>Track your meals and hit your daily goals</p>
+    </div>
+    <div class="welcome-badge">
+        <div>
+            <span>Welcome back</span>
+            <strong>Your Name</strong>
+        </div>
+        <div class="avatar">YN</div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#f59e0b"></div>
+        <div class="label">BREAKFAST</div>
+        <div class="value"><span id="s-b">0</span><span class="unit">kcal</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#3b82f6"></div>
+        <div class="label">LUNCH</div>
+        <div class="value"><span id="s-l">0</span><span class="unit">kcal</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#6366f1"></div>
+        <div class="label">DINNER</div>
+        <div class="value"><span id="s-d">0</span><span class="unit">kcal</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#22c55e"></div>
+        <div class="label">TOTAL TODAY</div>
+        <div class="value"><span id="s-total">0</span><span class="unit">kcal</span></div>
+    </div>
+</div>
+
+<!-- AI COACH -->
+<div class="ai-card">
+    <div class="ai-icon">✦</div>
+    <div>
+        <div class="ai-badge">AI COACH</div>
+        <h3 id="ai-title">Start logging your meals!</h3>
+        <p id="ai-body">Search for any food above and add it to breakfast, lunch, or dinner to start tracking your daily calories.</p>
+    </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-bar">
+    <input id="search" placeholder="🔍  Search food (e.g. chicken rice, dominos pizza...)"
+        onkeydown="if(event.key==='Enter') searchFood()">
+    <button class="search-btn" onclick="searchFood()">Search</button>
+</div>
+
+<!-- RESULTS -->
+<div class="results-section">
+    <div class="results-label" id="results-label" style="display:none">Search Results</div>
+    <div class="results" id="results"></div>
+</div>
+
+<!-- MEALS -->
+<div class="meals-grid">
+    <div class="meal-box">
+        <div class="meal-header">
+            <h2>🍳 Breakfast</h2>
+            <div class="total-badge total-b"><span id="bTotal">0</span> kcal</div>
+        </div>
+        <div id="breakfast"><div class="empty-meal"><div class="icon">🍳</div><p>Nothing added yet</p></div></div>
+    </div>
+    <div class="meal-box">
+        <div class="meal-header">
+            <h2>🍛 Lunch</h2>
+            <div class="total-badge total-l"><span id="lTotal">0</span> kcal</div>
+        </div>
+        <div id="lunch"><div class="empty-meal"><div class="icon">🍛</div><p>Nothing added yet</p></div></div>
+    </div>
+    <div class="meal-box">
+        <div class="meal-header">
+            <h2>🍽️ Dinner</h2>
+            <div class="total-badge total-d"><span id="dTotal">0</span> kcal</div>
+        </div>
+        <div id="dinner"><div class="empty-meal"><div class="icon">🍽️</div><p>Nothing added yet</p></div></div>
+    </div>
+</div>
+
+<script>
+
+let breakfast = [], lunch = [], dinner = [];
+let bTotal = 0, lTotal = 0, dTotal = 0;
+
+const aiTips = [
+    { title: "Great start! Keep going 💪", body: "You're building momentum. Try to balance your macros across all three meals today." },
+    { title: "Halfway there!", body: "You've logged a few meals. Staying consistent with tracking leads to better habits over time." },
+    { title: "Nice calorie spread!", body: "Spreading calories across breakfast, lunch and dinner keeps your energy stable all day." },
+];
+
+async function searchFood() {
+    let food = document.getElementById("search").value.trim();
+    if (!food) return;
+
+    document.getElementById("results").innerHTML = '<div class="loading">🔍 Searching...</div>';
+    document.getElementById("results-label").style.display = "block";
+
+    let res = await fetch("/search-food", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ food })
+    });
+
+    let data = await res.json();
+    let html = "";
+
+    data.foods.forEach(f => {
+        html += `
+        <div class="card">
+            <h3>${f.name}</h3>
+            <div class="kcal">${f.calories}<span>kcal</span></div>
+            <div class="card-btns">
+                <button class="meal-btn btn-b" onclick='add("breakfast","${f.name}",${f.calories})'>🍳 + Breakfast</button>
+                <button class="meal-btn btn-l" onclick='add("lunch","${f.name}",${f.calories})'>🍛 + Lunch</button>
+                <button class="meal-btn btn-d" onclick='add("dinner","${f.name}",${f.calories})'>🍽️ + Dinner</button>
+            </div>
+        </div>`;
+    });
+
+    document.getElementById("results").innerHTML = html;
+}
+
+function add(meal, name, cal) {
+    const obj = { name, cal };
+    if (meal === "breakfast") { breakfast.push(obj); bTotal += cal; }
+    if (meal === "lunch")     { lunch.push(obj);     lTotal += cal; }
+    if (meal === "dinner")    { dinner.push(obj);     dTotal += cal; }
+    render();
+    updateAI();
+}
+
+function remove(meal, index) {
+    if (meal === "breakfast") { bTotal -= breakfast[index].cal; breakfast.splice(index, 1); }
+    if (meal === "lunch")     { lTotal -= lunch[index].cal;     lunch.splice(index, 1); }
+    if (meal === "dinner")    { dTotal -= dinner[index].cal;    dinner.splice(index, 1); }
+    render();
+    updateAI();
+}
+
+function renderMeal(arr, meal) {
+    if (arr.length === 0) {
+        const icons = { breakfast: "🍳", lunch: "🍛", dinner: "🍽️" };
+        return `<div class="empty-meal"><div class="icon">${icons[meal]}</div><p>Nothing added yet</p></div>`;
+    }
+    return arr.map((f, i) => `
+        <div class="meal-item">
+            <div>
+                <div class="meal-item-left">${f.name}</div>
+                <div class="meal-item-cal">${f.cal} kcal</div>
+            </div>
+            <button class="remove-btn" onclick="remove('${meal}',${i})">×</button>
+        </div>`).join("");
+}
+
+function render() {
+    document.getElementById("breakfast").innerHTML = renderMeal(breakfast, "breakfast");
+    document.getElementById("lunch").innerHTML     = renderMeal(lunch, "lunch");
+    document.getElementById("dinner").innerHTML    = renderMeal(dinner, "dinner");
+
+    document.getElementById("bTotal").innerText = bTotal;
+    document.getElementById("lTotal").innerText = lTotal;
+    document.getElementById("dTotal").innerText = dTotal;
+
+    document.getElementById("s-b").innerText = bTotal;
+    document.getElementById("s-l").innerText = lTotal;
+    document.getElementById("s-d").innerText = dTotal;
+    document.getElementById("s-total").innerText = bTotal + lTotal + dTotal;
+}
+
+function updateAI() {
+    const total = breakfast.length + lunch.length + dinner.length;
+    const tip = aiTips[Math.min(total - 1, aiTips.length - 1)];
+    if (tip) {
+        document.getElementById("ai-title").innerText = tip.title;
+        document.getElementById("ai-body").innerText = tip.body;
+    }
+}
+
+</script>
+</body>
+</html>

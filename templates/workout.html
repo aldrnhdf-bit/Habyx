@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Workout Builder</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4ff;
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* TOP HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.header-left h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.header-left p {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.welcome-badge {
+    background: white;
+    border-radius: 50px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.welcome-badge span {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.welcome-badge strong {
+    font-size: 14px;
+    color: #1e293b;
+    display: block;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* STATS ROW */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stat-card .label {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.stat-card .unit {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-left: 4px;
+}
+
+.stat-accent {
+    height: 3px;
+    width: 32px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* MAIN GRID */
+.main-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr 260px;
+    gap: 20px;
+    align-items: start;
+}
+
+/* STICKMAN CARD */
+.stickman-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.stickman-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+svg {
+    width: 220px;
+    height: 340px;
+}
+
+.part {
+    fill: none;
+    stroke: #cbd5e1;
+    stroke-width: 6;
+    stroke-linecap: round;
+    cursor: pointer;
+    transition: stroke 0.2s, filter 0.2s;
+}
+
+.part:hover {
+    stroke: #3b82f6;
+    filter: drop-shadow(0 0 6px rgba(59,130,246,0.5));
+}
+
+.part.active {
+    stroke: #3b82f6;
+    filter: drop-shadow(0 0 8px rgba(59,130,246,0.6));
+}
+
+.body-labels {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.body-tag {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    border: 1.5px solid #e2e8f0;
+    color: #64748b;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.body-tag:hover, .body-tag.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+/* WORKOUT PANEL */
+.workout-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.workout-card {
+    background: white;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.workout-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.workout-card .subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 18px;
+}
+
+.exercise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1.5px solid #e2e8f0;
+    transition: border-color 0.2s;
+}
+
+.exercise-item:hover {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.exercise-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.exercise-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.exercise-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.xp-badge {
+    font-size: 11px;
+    color: #3b82f6;
+    background: #eff6ff;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+.add-btn {
+    padding: 7px 14px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-btn:hover { background: #2563eb; }
+
+/* ROUTINE CARD */
+.routine-card {
+    background: white;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.routine-card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.routine-count {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+}
+
+.routine-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1.5px solid #e2e8f0;
+}
+
+.routine-item span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+}
+
+.remove-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.2s;
+}
+
+.remove-btn:hover { background: #fecaca; }
+
+.empty-routine {
+    text-align: center;
+    padding: 30px 0;
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.empty-routine .icon { font-size: 32px; margin-bottom: 8px; }
+
+/* SAVE BUTTON */
+.save-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+
+.save-btn:hover { opacity: 0.9; }
+
+/* AI COACH CARD */
+.ai-card {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 20px;
+    padding: 22px;
+    color: white;
+    margin-top: 16px;
+}
+
+.ai-badge {
+    background: rgba(255,255,255,0.2);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.ai-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.ai-card p {
+    font-size: 12px;
+    opacity: 0.85;
+    line-height: 1.6;
+}
+
+/* PLACEHOLDER */
+.placeholder {
+    text-align: center;
+    padding: 50px 20px;
+    color: #cbd5e1;
+}
+
+.placeholder .big-icon { font-size: 48px; margin-bottom: 12px; }
+.placeholder p { font-size: 14px; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-left">
+        <h1>💪 Workout Builder</h1>
+        <p>Click a body part to get started</p>
+    </div>
+    <div class="welcome-badge">
+        <div>
+            <span>Welcome back</span>
+            <strong>Your Name</strong>
+        </div>
+        <div class="avatar">YN</div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#3b82f6"></div>
+        <div class="label">CURRENT STREAK</div>
+        <div class="value">18 <span class="unit">days</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#6366f1"></div>
+        <div class="label">CURRENT XP</div>
+        <div class="value">2,430 <span class="unit">xp</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#f59e0b"></div>
+        <div class="label">EXERCISES TODAY</div>
+        <div class="value" id="stat-count">0 <span class="unit">added</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#22c55e"></div>
+        <div class="label">ACHIEVEMENTS</div>
+        <div class="value">12 <span class="unit">badges</span></div>
+    </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+    <!-- STICKMAN -->
+    <div class="stickman-card">
+        <h3>Select Body Part</h3>
+
+        <svg viewBox="0 0 200 340">
+            <!-- Head -->
+            <circle class="part" id="p-head" cx="100" cy="45" r="28"
+                onclick="show('head','p-head')" />
+            <!-- Torso -->
+            <line class="part" id="p-torso" x1="100" y1="73" x2="100" y2="190"
+                onclick="show('torso','p-torso')" />
+            <!-- Arms -->
+            <line class="part" id="p-arms1" x1="100" y1="110" x2="38" y2="155"
+                onclick="show('arms','p-arms1')" />
+            <line class="part" id="p-arms2" x1="100" y1="110" x2="162" y2="155"
+                onclick="show('arms','p-arms2')" />
+            <!-- Legs -->
+            <line class="part" id="p-legs1" x1="100" y1="190" x2="55" y2="310"
+                onclick="show('legs','p-legs1')" />
+            <line class="part" id="p-legs2" x1="100" y1="190" x2="145" y2="310"
+                onclick="show('legs','p-legs2')" />
+        </svg>
+
+        <div class="body-labels">
+            <div class="body-tag" id="tag-head" onclick="show('head','p-head')">Head</div>
+            <div class="body-tag" id="tag-arms" onclick="show('arms','p-arms1')">Arms</div>
+            <div class="body-tag" id="tag-torso" onclick="show('torso','p-torso')">Torso</div>
+            <div class="body-tag" id="tag-legs" onclick="show('legs','p-legs1')">Legs</div>
+        </div>
+
+        <!-- AI Card inside stickman column -->
+        <div class="ai-card" style="margin-top:20px;text-align:left;">
+            <div class="ai-badge">✦ AI COACH</div>
+            <h3 id="ai-tip-title">Pick a body part!</h3>
+            <p id="ai-tip-body">Tap any part of the stickman or use the labels above to see exercises for that muscle group.</p>
+        </div>
+    </div>
+
+    <!-- WORKOUT EXERCISES -->
+    <div class="workout-panel">
+        <div class="workout-card">
+            <h2 id="title">Choose a Body Part</h2>
+            <p class="subtitle" id="subtitle">Tap the stickman to begin</p>
+            <div id="workouts">
+                <div class="placeholder">
+                    <div class="big-icon">🏋️</div>
+                    <p>Select a body part from the stickman to see available exercises</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROUTINE SIDEBAR -->
+    <div>
+        <div class="routine-card">
+            <h2>📝 My Routine</h2>
+            <div class="routine-count" id="routine-count">0 exercises added</div>
+            <div id="routine">
+                <div class="empty-routine">
+                    <div class="icon">📋</div>
+                    <p>No exercises yet.<br>Add some to get started!</p>
+                </div>
+            </div>
+            <button class="save-btn" onclick="saveRoutine()">SAVE ROUTINE</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+let routine = [];
+let currentPart = "";
+let activeParts = [];
+
+const workoutData = {
+    head: {
+        icon: "🧠",
+        tip: "Best next: Neck Rotation",
+        tipBody: "Neck and breathing exercises help with posture and stress relief. Great way to start your session!",
+        exercises: [
+            { name: "Neck Stretches", xp: "+20 XP" },
+            { name: "Jaw Relaxation", xp: "+15 XP" },
+            { name: "Neck Rotation", xp: "+20 XP" },
+            { name: "Head Tilt Stretch", xp: "+15 XP" },
+            { name: "Breathing Focus", xp: "+25 XP" }
+        ]
+    },
+    arms: {
+        icon: "💪",
+        tip: "Best next: Bicep Curls",
+        tipBody: "Your arms haven't been trained today. Starting with bicep curls gives maximum pump and XP gains!",
+        exercises: [
+            { name: "Bicep Curls", xp: "+45 XP" },
+            { name: "Tricep Dips", xp: "+40 XP" },
+            { name: "Push Ups", xp: "+50 XP" },
+            { name: "Arm Circles", xp: "+25 XP" },
+            { name: "Hammer Curls", xp: "+45 XP" }
+        ]
+    },
+    torso: {
+        icon: "🔥",
+        tip: "Best next: Plank",
+        tipBody: "Core strength is the foundation of every workout. A strong torso improves all other exercises!",
+        exercises: [
+            { name: "Plank", xp: "+50 XP" },
+            { name: "Sit Ups", xp: "+40 XP" },
+            { name: "Crunches", xp: "+35 XP" },
+            { name: "Russian Twists", xp: "+45 XP" },
+            { name: "Mountain Climbers", xp: "+55 XP" }
+        ]
+    },
+    legs: {
+        icon: "🦵",
+        tip: "Best next: Squats",
+        tipBody: "Legs are your biggest muscle group — training them burns the most calories and builds the most XP!",
+        exercises: [
+            { name: "Squats", xp: "+55 XP" },
+            { name: "Lunges", xp: "+50 XP" },
+            { name: "Calf Raises", xp: "+30 XP" },
+            { name: "Jump Squats", xp: "+60 XP" },
+            { name: "Wall Sit", xp: "+45 XP" }
+        ]
+    }
+};
+
+const partGroups = {
+    head:  ['p-head'],
+    arms:  ['p-arms1','p-arms2'],
+    torso: ['p-torso'],
+    legs:  ['p-legs1','p-legs2']
+};
+
+function clearActive() {
+    document.querySelectorAll('.part').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.body-tag').forEach(el => el.classList.remove('active'));
+}
+
+function show(part) {
+    currentPart = part;
+    clearActive();
+
+    partGroups[part].forEach(id => {
+        document.getElementById(id)?.classList.add('active');
+    });
+    document.getElementById('tag-' + part)?.classList.add('active');
+
+    const data = workoutData[part];
+
+    document.getElementById("title").innerText = part.charAt(0).toUpperCase() + part.slice(1) + " Workouts";
+    document.getElementById("subtitle").innerText = data.exercises.length + " exercises available";
+
+    document.getElementById("ai-tip-title").innerText = data.tip;
+    document.getElementById("ai-tip-body").innerText = data.tipBody;
+
+    let html = "";
+    data.exercises.forEach(w => {
+        html += `
+        <div class="exercise-item">
+            <div class="exercise-left">
+                <div class="exercise-icon">${data.icon}</div>
+                <div>
+                    <div class="exercise-name">${w.name}</div>
+                    <span class="xp-badge">${w.xp}</span>
+                </div>
+            </div>
+            <button class="add-btn" onclick="add('${w.name}')">+ Add</button>
+        </div>`;
+    });
+
+    document.getElementById("workouts").innerHTML = html;
+}
+
+function add(workout) {
+    routine.push(workout);
+    renderRoutine();
+}
+
+function remove(index) {
+    routine.splice(index, 1);
+    renderRoutine();
+}
+
+function renderRoutine() {
+    document.getElementById("stat-count").innerHTML = routine.length + ' <span class="unit">added</span>';
+    document.getElementById("routine-count").innerText = routine.length + " exercise" + (routine.length !== 1 ? "s" : "") + " added";
+
+    if (routine.length === 0) {
+        document.getElementById("routine").innerHTML = `
+            <div class="empty-routine">
+                <div class="icon">📋</div>
+                <p>No exercises yet.<br>Add some to get started!</p>
+            </div>`;
+        return;
+    }
+
+    let html = "";
+    routine.forEach((r, i) => {
+        html += `
+        <div class="routine-item">
+            <span>${r}</span>
+            <button class="remove-btn" onclick="remove(${i})">×</button>
+        </div>`;
+    });
+
+    document.getElementById("routine").innerHTML = html;
+}
+
+function saveRoutine() {
+    if (routine.length === 0) {
+        alert("No exercises added!");
+        return;
+    }
+
+    fetch("/save-workout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: routine.join(", "),
+            body_part: currentPart || "mixed"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("✅ Routine saved!");
+        routine = [];
+        renderRoutine();
+    });
+}
+
+</script>
+</body>
+</html>
