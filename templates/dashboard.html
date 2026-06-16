@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habyx Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="{{ url_for('dashboard') }}" aria-label="Habyx dashboard">
+        <span class="brand-mark">H</span>
+        <span>Habyx</span>
+      </a>
+
+      <div class="profile">
+        <div>
+          <p class="profile-kicker">Welcome back</p>
+          <h1>{{ user.name }}</h1>
+        </div>
+        <div class="avatar" aria-label="Profile picture placeholder">{{ user.avatar_initials }}</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-grid" aria-label="Dashboard overview">
+        <div class="xp-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">{{ user.title }}</p>
+              <h2>Level {{ xp.level }}</h2>
+            </div>
+            <span class="xp-pill">{{ xp.current }} XP</span>
+          </div>
+
+          <div class="level-orbit" aria-hidden="true">
+            <span>{{ xp.percent }}%</span>
+          </div>
+
+          <div class="progress-block">
+            <div class="progress-meta">
+              <span>XP Progress</span>
+              <strong>{{ xp.remaining }} XP until Level {{ xp.level + 1 }}</strong>
+            </div>
+            <div class="progress-track" aria-label="{{ xp.percent }} percent progress to next level">
+              <div class="progress-fill" data-progress="{{ xp.percent }}"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid" aria-label="Statistics cards">
+          {% for stat in stats %}
+            <article class="stat-card accent-{{ stat.accent }}">
+              <span class="stat-icon"></span>
+              <p>{{ stat.label }}</p>
+              <div>
+                <strong>{{ stat.value }}</strong>
+                <span>{{ stat.unit }}</span>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="primary-column">
+          <section class="panel habits-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Daily plan</p>
+                <h2>Today's Habits</h2>
+              </div>
+              <span class="completion-count">
+                {{ habits | selectattr("completed") | list | length }} / {{ habits | length }}
+              </span>
+            </div>
+
+            <div class="habit-list">
+              {% for habit in habits %}
+                <article class="habit-item {% if habit.completed %}is-complete{% endif %}">
+                  <div class="habit-check" aria-hidden="true"></div>
+                  <div class="habit-copy">
+                    <div>
+                      <h3>{{ habit.name }}</h3>
+                      <span>{{ habit.time }}</span>
+                    </div>
+                    <p>{{ habit.category }}</p>
+                  </div>
+                  <span class="habit-xp">+{{ habit.xp }} XP</span>
+                </article>
+              {% endfor %}
+            </div>
+          </section>
+
+          <section class="panel analytics-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Analytics</p>
+                <h2>Weekly Completion</h2>
+              </div>
+              <span class="trend-pill">+14%</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas
+                id="weeklyCompletionChart"
+                aria-label="Weekly completion line chart"
+                role="img"
+              ></canvas>
+            </div>
+          </section>
+        </div>
+
+        <aside class="side-column">
+          <section class="coach-card">
+            <div class="coach-icon" aria-hidden="true">AI</div>
+            <p class="eyebrow">AI Coach</p>
+            <h2>{{ ai_coach.focus }}</h2>
+            <p>{{ ai_coach.message }}</p>
+          </section>
+
+          <section class="panel achievements-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Collection</p>
+                <h2>Achievements</h2>
+              </div>
+            </div>
+
+            <div class="achievement-list">
+              {% for achievement in achievements %}
+                <article class="achievement {% if not achievement.unlocked %}is-locked{% endif %}">
+                  <div class="achievement-medal" aria-hidden="true"></div>
+                  <div>
+                    <h3>{{ achievement.name }}</h3>
+                    <p>{{ achievement.description }}</p>
+                  </div>
+                  <span>{{ "Unlocked" if achievement.unlocked else "Locked" }}</span>
+                </article>
+              {% endfor %}
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script id="weekly-completion-data" type="application/json">{{ weekly_completion | tojson }}</script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
