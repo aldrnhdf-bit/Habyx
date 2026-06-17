@@ -39,6 +39,22 @@ body {
     color: white; font-size: 13px; font-weight: 700;
 }
 
+/* STATS */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: white; border-radius: 16px;
+    padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.stat-accent { height: 3px; width: 32px; border-radius: 4px; margin-bottom: 10px; }
+.stat-card .label { font-size: 12px; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.5px; }
+.stat-card .value { font-size: 26px; font-weight: 700; color: #1e293b; }
+.stat-card .unit { font-size: 13px; color: #94a3b8; margin-left: 3px; }
+
 /* XP PROGRESS CARD */
 .xp-card {
     background: white;
@@ -51,7 +67,6 @@ body {
     gap: 28px;
 }
 
-/* DONUT */
 .donut-wrap {
     position: relative;
     width: 90px;
@@ -141,26 +156,153 @@ body {
 .cat-name { font-size: 13px; font-weight: 600; color: #334155; }
 .cat-xp { font-size: 11px; color: #3b82f6; margin-top: 3px; }
 
-/* TODAY'S HABITS inline card */
-.habits-card {
+/* PLANNER CARD */
+.planner-card {
     background: white; border-radius: 20px;
     padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow-x: auto;
 }
-.habits-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 16px;
+
+.planner-header h3 { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+
+.time-table {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    gap: 8px;
+    min-width: 900px;
 }
-.habits-header h3 { font-size: 16px; font-weight: 700; color: #1e293b; }
-.habits-count {
-    font-size: 12px; font-weight: 700;
-    background: #eff6ff; color: #3b82f6;
-    padding: 3px 12px; border-radius: 20px;
+
+.time-label {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.day-header {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-slot {
+    background: white;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 100px;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.time-slot:hover {
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+.time-slot.drag-over {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.2);
+}
+
+.planned-task {
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 10px;
+    cursor: grab;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 4px;
+}
+
+.planned-task:hover {
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+.planned-task.completed {
+    background: #f0fdf4;
+    border-color: #22c55e;
+    opacity: 0.8;
+}
+
+.task-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.task-name { font-weight: 600; color: #1e293b; }
+.task-type { font-size: 9px; color: #94a3b8; }
+
+.task-delete-btn {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 12px;
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.task-delete-btn:hover {
+    opacity: 1;
+    color: #ef4444;
+}
+
+.task-check {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid #e2e8f0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.task-check:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.planned-task.completed .task-check {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: white;
 }
 
 /* SIDEBAR */
 .sidebar { display: flex; flex-direction: column; gap: 16px; }
 
-/* AI CARD */
 .ai-card {
     background: linear-gradient(135deg, #3b82f6, #6366f1);
     border-radius: 20px; padding: 20px; color: white;
@@ -174,7 +316,6 @@ body {
 .ai-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .ai-card p { font-size: 12px; opacity: 0.85; line-height: 1.6; }
 
-/* FEED CARD */
 .feed-card {
     background: white; border-radius: 20px;
     padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -205,6 +346,7 @@ body {
     border-radius: 10px; margin-bottom: 8px;
     border: 1.5px solid #e2e8f0;
     transition: border-color 0.2s;
+    cursor: grab;
 }
 .feed-item:hover { border-color: #bfdbfe; }
 .feed-dot {
@@ -215,20 +357,6 @@ body {
 .feed-text { font-size: 12px; color: #64748b; }
 .empty-feed { text-align: center; padding: 20px 0; color: #cbd5e1; font-size: 13px; }
 .empty-feed .icon { font-size: 28px; margin-bottom: 8px; }
-
-/* STREAK & BADGES */
-.mini-stats {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-.mini-card {
-    background: white; border-radius: 16px;
-    padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    text-align: center;
-}
-.mini-card .m-val { font-size: 28px; font-weight: 700; color: #1e293b; }
-.mini-card .m-lbl { font-size: 12px; color: #94a3b8; }
-.mini-accent { height: 3px; width: 24px; border-radius: 4px; margin: 0 auto 8px; }
 
 </style>
 </head>
@@ -246,6 +374,30 @@ body {
     </div>
 </div>
 
+<!-- STATS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#3b82f6"></div>
+        <div class="label">CURRENT STREAK</div>
+        <div class="value"><span id="s-streak">18</span><span class="unit">days</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#6366f1"></div>
+        <div class="label">CURRENT XP</div>
+        <div class="value"><span id="s-xp">2,430</span><span class="unit">xp</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#f59e0b"></div>
+        <div class="label">EXERCISES TODAY</div>
+        <div class="value"><span id="stat-count">0</span><span class="unit">added</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#22c55e"></div>
+        <div class="label">ACHIEVEMENTS</div>
+        <div class="value">12<span class="unit">badges</span></div>
+    </div>
+</div>
+
 <!-- XP PROGRESS CARD -->
 <div class="xp-card">
     <div class="donut-wrap">
@@ -260,7 +412,7 @@ body {
             <circle class="donut-fill" id="donutFill" cx="45" cy="45" r="35"/>
         </svg>
         <div class="donut-label">
-            <div class="donut-pct">81%</div>
+            <div class="donut-pct" id="donut-pct">81%</div>
             <div class="donut-sub">TO LVL 8</div>
         </div>
     </div>
@@ -279,17 +431,17 @@ body {
 
     <div class="xp-stats">
         <div class="xp-stat">
-            <div class="mini-accent" style="background:#3b82f6"></div>
-            <div class="val">18</div>
+            <div class="xp-stat-accent" style="background:#3b82f6"></div>
+            <div class="val" id="s-days">18</div>
             <div class="lbl">Day Streak</div>
         </div>
         <div class="xp-stat">
-            <div class="mini-accent" style="background:#f59e0b"></div>
+            <div class="xp-stat-accent" style="background:#f59e0b"></div>
             <div class="val">12</div>
             <div class="lbl">Badges</div>
         </div>
         <div class="xp-stat">
-            <div class="mini-accent" style="background:#22c55e"></div>
+            <div class="xp-stat-accent" style="background:#22c55e"></div>
             <div class="val">2,430</div>
             <div class="lbl">Total XP</div>
         </div>
@@ -301,31 +453,21 @@ body {
 <div>
 
     <!-- CATEGORIES -->
-    <div class="categories-card" style="margin-bottom:16px">
+    <div class="categories-card">
         <div class="section-label">Activity Categories</div>
         <div class="cat-grid" id="catGrid">
-            {% for c in categories %}
-            <a class="cat-card" href="/{{ c.route }}">
-                <div class="cat-icon">{{ c.icon }}</div>
-                <div class="cat-name">{{ c.name }}</div>
-                <div class="cat-xp">+XP</div>
-            </a>
-            {% endfor %}
+            <!-- Populated by JavaScript -->
         </div>
     </div>
 
-    <!-- TODAY'S HABITS -->
-    <div class="habits-card">
-        <div class="habits-header">
-            <h3>📋 Daily Plan — Today's Habits</h3>
-            <div class="habits-count" id="habitsCount">2 / 4</div>
+    <!-- WEEKLY PLANNER -->
+    <div class="planner-card">
+        <div class="planner-header">
+            <h3>📅 Weekly Planner</h3>
+            <div style="font-size:11px;color:#94a3b8">Drag tasks to schedule them</div>
         </div>
-        <div id="habitsPreview">
-            <!-- populated by feed data or static for now -->
-            <div style="text-align:center;padding:20px;color:#cbd5e1;font-size:13px;">
-                <div style="font-size:28px;margin-bottom:8px">📋</div>
-                <p>Your saved habits will appear here</p>
-            </div>
+        <div class="time-table" id="timeTable">
+            <!-- Generated by JavaScript -->
         </div>
     </div>
 
@@ -337,8 +479,8 @@ body {
     <!-- AI COACH -->
     <div class="ai-card">
         <div class="ai-badge">✦ AI COACH</div>
-        <h3 id="ai-title">Best next habit: Stay Active!</h3>
-        <p id="ai-body">You finish health habits most consistently before noon. Try completing your next activity in the morning for an easy XP win.</p>
+        <h3 id="ai-title">Start building your routine!</h3>
+        <p id="ai-body">Add activities from the categories above and schedule them in the weekly planner to track your progress.</p>
     </div>
 
     <!-- LIVE FEED -->
@@ -360,19 +502,6 @@ body {
 
 <script>
 
-// Animate donut on load
-window.addEventListener('load', () => {
-    const circle = document.getElementById('donutFill');
-    const circumference = 2 * Math.PI * 35;
-    circle.style.strokeDasharray = circumference;
-    circle.style.strokeDashoffset = circumference;
-    setTimeout(() => {
-        circle.style.transition = 'stroke-dashoffset 1s ease';
-        circle.style.strokeDashoffset = circumference * (1 - 0.81);
-    }, 200);
-});
-
-// Color map for feed types
 const typeColors = {
     Workout:   { color: '#3b82f6', bg: '#eff6ff' },
     Nutrition: { color: '#22c55e', bg: '#f0fdf4' },
@@ -381,6 +510,137 @@ const typeColors = {
     Cardio:    { color: '#6366f1', bg: '#ede9fe' },
     default:   { color: '#94a3b8', bg: '#f8fafc' },
 };
+
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const timeSlots = ["8 AM - 12 PM", "12 PM - 4 PM", "4 PM - 8 PM", "8 PM - 12 AM"];
+
+function handleDayDrop(event) {
+    event.preventDefault();
+    document.querySelectorAll(".time-slot").forEach(col => {
+        col.classList.remove("drag-over");
+    });
+    
+    const slot = event.currentTarget;
+    const dayIndex = parseInt(slot.getAttribute("data-day"));
+    const timeSlot = slot.getAttribute("data-slot");
+    
+    const type = event.dataTransfer.getData("type");
+    const text = event.dataTransfer.getData("text");
+    const source = event.dataTransfer.getData("source");
+    
+    if (source !== "feed") return;
+    
+    fetch("/save-planned-task", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            task_name: text,
+            task_type: type,
+            day: dayIndex,
+            time: timeSlot
+        })
+    })
+    .then(res => res.json())
+    .then(() => loadPlannedTasks())
+    .catch(err => console.error(err));
+}
+
+function dragOverDay(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+    event.currentTarget.classList.add("drag-over");
+}
+
+function dragLeaveDay(event) {
+    event.currentTarget.classList.remove("drag-over");
+}
+
+function renderWeekGrid() {
+    let html = "";
+    html += '<div class="time-label"></div>';
+    days.forEach(day => {
+        html += `<div class="day-header">${day}</div>`;
+    });
+    
+    timeSlots.forEach((slot, slotIdx) => {
+        html += `<div class="time-label">${slot}</div>`;
+        days.forEach((day, dayIdx) => {
+            html += `<div class="time-slot" data-day="${dayIdx}" data-slot="${slot}"
+                          ondrop="handleDayDrop(event)"
+                          ondragover="dragOverDay(event)"
+                          ondragleave="dragLeaveDay(event)"
+                          id="slot-${dayIdx}-${slotIdx}"></div>`;
+        });
+    });
+    
+    document.getElementById("timeTable").innerHTML = html;
+    loadPlannedTasks();
+}
+
+function loadPlannedTasks() {
+    fetch("/get-planned-tasks")
+        .then(res => res.json())
+        .then(tasks => {
+            document.querySelectorAll(".time-slot").forEach(slot => {
+                slot.innerHTML = "";
+            });
+            
+            tasks.forEach(task => {
+                const slotEl = document.getElementById(`slot-${task.day}-${timeSlots.indexOf(task.time)}`);
+                if (!slotEl) return;
+                
+                const style = typeColors[task.task_type] || typeColors.default;
+                
+                const html = `
+                <div class="planned-task ${task.completed ? 'completed' : ''}" style="border-color:${style.color}">
+                    <div class="task-check" onclick="togglePlannedTask(${task.id}, ${!task.completed})">${task.completed ? '✓' : ''}</div>
+                    <div class="task-info">
+                        <div class="task-name" style="color:${style.color}">${task.task_type}</div>
+                        <div class="task-type">${task.task_name}</div>
+                    </div>
+                    <button class="task-delete-btn" onclick="deletePlannedTask(${task.id})">🗑️</button>
+                </div>`;
+                
+                slotEl.innerHTML += html;
+            });
+            
+            updateStreakFromPlanned(tasks);
+        })
+        .catch(err => console.error(err));
+}
+
+function togglePlannedTask(id, completed) {
+    const today = new Date().toISOString().split('T')[0];
+    
+    fetch(`/toggle-planned-task/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            completed: completed,
+            date_completed: completed ? today : null
+        })
+    })
+    .then(res => res.json())
+    .then(() => loadPlannedTasks())
+    .catch(err => console.error(err));
+}
+
+function deletePlannedTask(id) {
+    if (!confirm("Delete this task?")) return;
+    
+    fetch(`/delete-planned-task/${id}`, { method: "DELETE" })
+        .then(res => res.json())
+        .then(() => loadPlannedTasks())
+        .catch(err => console.error(err));
+}
+
+function updateStreakFromPlanned(tasks) {
+    const completedDays = new Set(tasks.filter(t => t.completed).map(t => t.day));
+    const streakCount = completedDays.size;
+    document.getElementById("donut-pct").innerText = Math.round((streakCount / 7) * 100) + "%";
+    document.getElementById("s-days").innerText = streakCount;
+    document.getElementById("s-streak").innerText = streakCount;
+}
 
 function loadDashboard() {
     fetch("/get-dashboard")
@@ -395,15 +655,17 @@ function loadDashboard() {
                 return;
             }
 
-            document.getElementById("feed").innerHTML = data.map(item => {
+            document.getElementById("feed").innerHTML = data.map((item, idx) => {
                 const style = typeColors[item.type] || typeColors.default;
                 return `
-                <div class="feed-item">
+                <div class="feed-item" draggable="true" ondragstart="handleFeedDragStart(event, '${item.type}', '${item.text.replace(/'/g, "\\'")}', '${idx}')" ondragend="handleFeedDragEnd(event)">
                     <div class="feed-dot" style="background:${style.color}"></div>
-                    <div>
+                    <div style="flex:1">
                         <div class="feed-type" style="color:${style.color}">${item.type}</div>
                         <div class="feed-text">${item.text}</div>
                     </div>
+                    <button style="background:none;border:none;color:#cbd5e1;cursor:pointer;padding:4px;font-size:14px;opacity:0.6;transition:opacity 0.2s" onclick="deleteTask('${item.type}', ${item.id})" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="Delete task">🗑️</button>
+                    <div style="color:#cbd5e1;font-size:11px;cursor:grab">≡</div>
                 </div>`;
             }).join("");
         })
@@ -416,8 +678,74 @@ function loadDashboard() {
         });
 }
 
+function handleFeedDragStart(event, type, text, idx) {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("type", type);
+    event.dataTransfer.setData("text", text);
+    event.dataTransfer.setData("idx", idx);
+    event.dataTransfer.setData("source", "feed");
+    event.target.closest(".feed-item").style.opacity = "0.5";
+}
+
+function handleFeedDragEnd(event) {
+    event.target.closest(".feed-item").style.opacity = "1";
+}
+
+function deleteTask(type, id) {
+    if (!confirm("Delete this task?")) return;
+    
+    const typeMap = {
+        "Workout": "delete-workout",
+        "Cardio": "delete-cardio",
+        "Nutrition": "delete-meal",
+        "Hydration": "delete-water",
+        "Hygiene": "delete-hygiene"
+    };
+    
+    const endpoint = typeMap[type];
+    if (!endpoint) return;
+    
+    fetch(`/${endpoint}/${id}`, { method: "DELETE" })
+        .then(res => res.json())
+        .then(() => {
+            loadDashboard();
+        })
+        .catch(err => console.error("Delete error:", err));
+}
+
+// Categories data
+const categories = [
+    {"name": "Workout", "icon": "🏋️", "route": "workout"},
+    {"name": "Cardio", "icon": "🏃", "route": "cardio"},
+    {"name": "Hydration", "icon": "💧", "route": "hydration"},
+    {"name": "Hygiene", "icon": "🪥", "route": "hygiene"},
+    {"name": "Nutrition", "icon": "🥗", "route": "nutrition"}
+];
+
+// Render categories
+document.getElementById("catGrid").innerHTML = categories.map(c => `
+    <a class="cat-card" href="/${c.route}">
+        <div class="cat-icon">${c.icon}</div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-xp">+XP</div>
+    </a>
+`).join("");
+
 loadDashboard();
+renderWeekGrid();
 setInterval(loadDashboard, 3000);
+
+// Animate donut on load
+window.addEventListener('load', () => {
+    const circle = document.getElementById('donutFill');
+    const circumference = 2 * Math.PI * 35;
+    circle.style.strokeDasharray = circumference;
+    circle.style.strokeDashoffset = circumference;
+    setTimeout(() => {
+        circle.style.transition = 'stroke-dashoffset 1s ease';
+        circle.style.strokeDashoffset = circumference * (1 - 0.81);
+    }, 200);
+});
 
 </script>
 </body>

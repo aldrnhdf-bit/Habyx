@@ -63,6 +63,16 @@ def init_db():
         time_of_day TEXT
     )""")
 
+    c.execute("""CREATE TABLE IF NOT EXISTS planned_tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task_name TEXT,
+        task_type TEXT,
+        day_of_week INTEGER,
+        time TEXT,
+        completed BOOLEAN DEFAULT 0,
+        date_completed TEXT
+    )""")
+
     conn.commit()
     conn.close()
 
@@ -106,37 +116,125 @@ def get_dashboard():
     items = []
 
     try:
-        c.execute("SELECT name, body_part FROM workouts ORDER BY id DESC LIMIT 3")
+        c.execute("SELECT id, name, body_part FROM workouts ORDER BY id DESC LIMIT 3")
         for r in c.fetchall():
-            items.append({"type": "Workout", "text": f"{r['name']} — {r['body_part']}"})
+            items.append({"type": "Workout", "text": f"{r['name']} — {r['body_part']}", "id": r["id"]})
     except: pass
 
     try:
-        c.execute("SELECT activity, duration FROM cardio ORDER BY id DESC LIMIT 3")
+        c.execute("SELECT id, activity, duration FROM cardio ORDER BY id DESC LIMIT 3")
         for r in c.fetchall():
-            items.append({"type": "Cardio", "text": f"{r['activity']} for {r['duration']} min"})
+            items.append({"type": "Cardio", "text": f"{r['activity']} for {r['duration']} min", "id": r["id"]})
     except: pass
 
     try:
-        c.execute("SELECT name, calories FROM meals ORDER BY id DESC LIMIT 3")
+        c.execute("SELECT id, name, calories FROM meals ORDER BY id DESC LIMIT 3")
         for r in c.fetchall():
-            items.append({"type": "Nutrition", "text": f"{r['name']} — {r['calories']} kcal"})
+            items.append({"type": "Nutrition", "text": f"{r['name']} — {r['calories']} kcal", "id": r["id"]})
     except: pass
 
     try:
-        c.execute("SELECT amount_ml, time FROM hydration ORDER BY id DESC LIMIT 3")
+        c.execute("SELECT id, amount_ml, time FROM hydration ORDER BY id DESC LIMIT 3")
         for r in c.fetchall():
-            items.append({"type": "Hydration", "text": f"{r['amount_ml']} ml at {r['time']}"})
+            items.append({"type": "Hydration", "text": f"{r['amount_ml']} ml at {r['time']}", "id": r["id"]})
     except: pass
 
     try:
-        c.execute("SELECT task, time_of_day FROM hygiene ORDER BY id DESC LIMIT 3")
+        c.execute("SELECT id, task, time_of_day FROM hygiene ORDER BY id DESC LIMIT 3")
         for r in c.fetchall():
-            items.append({"type": "Hygiene", "text": f"{r['task']} ({r['time_of_day']})"})
+            items.append({"type": "Hygiene", "text": f"{r['task']} ({r['time_of_day']})", "id": r["id"]})
     except: pass
 
     conn.close()
     return jsonify(items)
+
+
+# =========================================================
+# DELETE ENDPOINTS
+# =========================================================
+@app.route("/delete-workout/<int:id>", methods=["DELETE"])
+def delete_workout(id):
+    conn = get_db()
+    conn.execute("DELETE FROM workouts WHERE id=?", (id,))
+    conn.commit(); conn.close()
+    return jsonify({"status": "deleted"})
+
+@app.route("/delete-cardio/<int:id>", methods=["DELETE"])
+def delete_cardio(id):
+    conn = get_db()
+    conn.execute("DELETE FROM cardio WHERE id=?", (id,))
+    conn.commit(); conn.close()
+    return jsonify({"status": "deleted"})
+
+@app.route("/delete-meal/<int:id>", methods=["DELETE"])
+def delete_meal(id):
+    conn = get_db()
+    conn.execute("DELETE FROM meals WHERE id=?", (id,))
+    conn.commit(); conn.close()
+    return jsonify({"status": "deleted"})
+
+@app.route("/delete-water/<int:id>", methods=["DELETE"])
+def delete_water(id):
+    conn = get_db()
+    conn.execute("DELETE FROM hydration WHERE id=?", (id,))
+    conn.commit(); conn.close()
+    return jsonify({"status": "deleted"})
+
+@app.route("/delete-hygiene/<int:id>", methods=["DELETE"])
+def delete_hygiene(id):
+    conn = get_db()
+    conn.execute("DELETE FROM hygiene WHERE id=?", (id,))
+    conn.commit(); conn.close()
+    return jsonify({"status": "deleted"})
+
+
+# =========================================================
+# PLANNED TASKS (Weekly Planner)
+# =========================================================
+@app.route("/save-planned-task", methods=["POST"])
+def save_planned_task():
+    data = request.get_json()
+    conn = get_db()
+    conn.execute("""INSERT INTO planned_tasks (task_name, task_type, day_of_week, time, completed)
+                    VALUES (?, ?, ?, ?, 0)""",
+                 (data["task_name"], data["task_type"], data["day"], data["time"]))
+    conn.commit(); conn.close()
+    return jsonify({"status": "saved"})
+
+@app.route("/get-planned-tasks")
+def get_planned_tasks():
+    conn = get_db()
+    rows = conn.execute("SELECT * FROM planned_tasks ORDER BY day_of_week, time").fetchall()
+    conn.close()
+    return jsonify([{"id": r["id"], "task_name": r["task_name"], "task_type": r["task_type"],
+                     "day": r["day_of_week"], "time": r["time"], "completed": r["completed"]} for r in rows])
+
+@app.route("/toggle-planned-task/<int:id>", methods=["POST"])
+def toggle_planned_task(id):
+    data = request.get_json()
+    conn = get_db()
+    conn.execute("UPDATE planned_tasks SET completed=?, date_completed=? WHERE id=?",
+                 (data["completed"], data["date_completed"] if data["completed"] else None, id))
+    conn.commit(); conn.close()
+    return jsonify({"status": "updated"})
+
+@app.route("/delete-planned-task/<int:id>", methods=["DELETE"])
+def delete_planned_task(id):
+    conn = get_db()
+    conn.execute("DELETE FROM planned_tasks WHERE id=?", (id,))
+    conn.commit(); conn.close()
+    return jsonify({"status": "deleted"})
+
+@app.route("/get-streak")
+def get_streak():
+    conn = get_db()
+    # Count consecutive completed days from today backwards
+    c = conn.cursor()
+    c.execute("""SELECT COUNT(DISTINCT day_of_week) as completed_days 
+                 FROM planned_tasks WHERE completed=1""")
+    result = c.fetchone()
+    conn.close()
+    return jsonify({"streak": result["completed_days"] if result else 0})
 
 
 # =========================================================
