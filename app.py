@@ -83,7 +83,6 @@ def init_db():
         last_activity_date TEXT
     )""")
 
-    # Initialize user_stats row if it doesn't exist
     c.execute("INSERT OR IGNORE INTO user_stats (id) VALUES (1)")
 
     conn.commit()
@@ -238,16 +237,18 @@ def delete_planned_task(id):
     conn.commit(); conn.close()
     return jsonify({"status": "deleted"})
 
-@app.route("/get-streak")
-def get_streak():
-    conn = get_db()
-    # Count consecutive completed days from today backwards
-    c = conn.cursor()
-    c.execute("""SELECT COUNT(DISTINCT day_of_week) as completed_days 
-                 FROM planned_tasks WHERE completed=1""")
-    result = c.fetchone()
-    conn.close()
-    return jsonify({"streak": result["completed_days"] if result else 0})
+@app.route("/reset-week", methods=["POST"])
+def reset_week():
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("UPDATE planned_tasks SET completed = 0, date_completed = NULL")
+        conn.commit()
+        conn.close()
+        return jsonify({"status": "reset"})
+    except Exception as e:
+        print(f"ERROR in reset_week: {e}")
+        return jsonify({"error": str(e)}), 500
 
 
 # =========================================================
@@ -371,10 +372,10 @@ def search_food():
             for nutrient in food.get("foodNutrients", []):
                 name = nutrient.get("nutrientName", "").lower()
                 value = nutrient.get("value", 0)
-                if "energy" in name:     calories = value
-                elif "protein" in name:  protein  = value
-                elif "carbohydrate" in name: carbs = value
-                elif "fat" in name:      fat      = value
+                if "energy" in name:          calories = value
+                elif "protein" in name:       protein  = value
+                elif "carbohydrate" in name:  carbs    = value
+                elif "fat" in name:           fat      = value
             foods.append({"name": food.get("description", "Unknown Food"),
                           "calories": calories, "protein": protein,
                           "carbs": carbs, "fat": fat})
@@ -384,6 +385,8 @@ def search_food():
         return jsonify({"foods": []})
 
 
+# =========================================================
+# XP & USER STATS
 # =========================================================
 @app.route("/add-xp", methods=["POST"])
 def add_xp():
@@ -397,10 +400,6 @@ def add_xp():
     conn.close()
     return jsonify({"total_xp": stats["total_xp"]})
 
-
-# =========================================================
-# USER STATS - Level & Streak
-# =========================================================
 @app.route("/get-user-stats")
 def get_user_stats():
     conn = get_db()
@@ -416,86 +415,8 @@ def get_user_stats():
         })
     return jsonify({"error": "No stats found"})
 
-@app.route("/complete-day", methods=["POST"])
-def complete_day():
-    data = request.get_json()
-    day_index = data.get("day")
-    
-    conn = get_db()
-    c = conn.cursor()
-    
-    # Get current streak
-    stats = c.execute("SELECT * FROM user_stats WHERE id=1").fetchone()
-    current_streak = stats["current_streak"]
-    longest_streak = stats["longest_streak"]
-    
-    # Increment streak
-    new_streak = current_streak + 1
-    new_longest = max(new_streak, longest_streak)
-    
-    # Award 100 XP for completing a day
-    c.execute("""UPDATE user_stats 
-                 SET current_streak = ?, longest_streak = ?, total_xp = total_xp + 100, current_xp = current_xp + 100
-                 WHERE id=1""", 
-              (new_streak, new_longest))
-    
-    conn.commit()
-    conn.close()
-    
-    return jsonify({"status": "completed", "streak": new_streak, "xp": 100})
 
-
-@app.route("/complete-week", methods=["POST"])
-def complete_week():
-    try:
-        conn = get_db()
-        c = conn.cursor()
-
-        stats = c.execute("SELECT * FROM user_stats WHERE id=1").fetchone()
-        if not stats:
-            return jsonify({"error": "No user stats found"}), 400
-        
-        current_streak = stats["current_streak"]
-        longest_streak = stats["longest_streak"]
-
-        # +1 week streak
-        new_streak = current_streak + 1
-        new_longest = max(new_streak, longest_streak)
-
-        # Award 500 XP for completing full week
-        c.execute("""UPDATE user_stats
-                     SET current_streak = ?, longest_streak = ?,
-                         total_xp = total_xp + 500, current_xp = current_xp + 500
-                     WHERE id=1""",
-                  (new_streak, new_longest))
-
-        # Reset all planned tasks for new week
-        c.execute("DELETE FROM planned_tasks")
-
-        conn.commit()
-        conn.close()
-
-        return jsonify({"status": "week_complete", "streak": new_streak, "xp_gained": 500})
-    except Exception as e:
-        print(f"ERROR in complete_week: {e}")
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/reset-week", methods=["POST"])
-def reset_week():
-    try:
-        conn = get_db()
-        c = conn.cursor()
-        # Uncheck all planned tasks but keep them in the planner
-        c.execute("UPDATE planned_tasks SET completed = 0, date_completed = NULL")
-        conn.commit()
-        conn.close()
-        return jsonify({"status": "reset"})
-    except Exception as e:
-        print(f"ERROR in reset_week: {e}")
-        return jsonify({"error": str(e)}), 500
-
-
+# =========================================================
 # RUN
 # =========================================================
 if __name__ == "__main__":

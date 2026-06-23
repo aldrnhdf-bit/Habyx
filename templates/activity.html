@@ -574,12 +574,10 @@ function loadPlannedTasks() {
     fetch("/get-planned-tasks")
         .then(res => res.json())
         .then(tasks => {
-            // Clear all day columns
             for (let i = 0; i < 7; i++) {
                 document.getElementById(`day-${i}`).innerHTML = "";
             }
             
-            // Add tasks to their days
             tasks.forEach(task => {
                 const dayTasks = document.getElementById(`day-${task.day}`);
                 const style = typeColors[task.task_type] || typeColors.default;
@@ -677,7 +675,7 @@ function togglePlannedTask(id, completed, event) {
     .catch(err => console.error(err));
 }
 
-/* ── DELETE PLANNED TASK ──────────────────── */
+/* ── RESET ALL TASKS ──────────────────────── */
 function resetAllTasks() {
     if (!confirm('Untick all tasks for the week?')) return;
     fetch('/reset-week', {
@@ -688,19 +686,15 @@ function resetAllTasks() {
     .then(res => res.json())
     .then(data => {
         if (data.error) {
-            console.error('Reset error:', data.error);
             alert('Error resetting tasks: ' + data.error);
         } else {
-            console.log('Reset successful:', data);
             loadPlannedTasks();
         }
     })
-    .catch(err => {
-        console.error('Reset week error:', err);
-        alert('Error resetting tasks: ' + err.message);
-    });
+    .catch(err => console.error(err));
 }
 
+/* ── DELETE PLANNED TASK ──────────────────── */
 function deletePlannedTask(id, event) {
     event.stopPropagation();
     if (!confirm('Delete this task?')) return;
@@ -721,6 +715,7 @@ function loadUserStats() {
         .catch(err => console.error(err));
 }
 
+/* ── LOAD DASHBOARD FEED ─────────────────── */
 function loadDashboard() {
     fetch("/get-dashboard")
         .then(res => res.json())
@@ -733,7 +728,6 @@ function loadDashboard() {
                     </div>`;
                 return;
             }
-
             document.getElementById("feed").innerHTML = data.map(item => {
                 const style = typeColors[item.type] || typeColors.default;
                 const safeText = (item.text || '').replace(/'/g, "\\'");
@@ -759,9 +753,9 @@ function loadDashboard() {
         });
 }
 
+/* ── DELETE FEED TASK ────────────────────── */
 function deleteTask(type, id) {
     if (!confirm("Delete this task?")) return;
-    
     const typeMap = {
         "Workout": "delete-workout",
         "Cardio": "delete-cardio",
@@ -769,16 +763,15 @@ function deleteTask(type, id) {
         "Hydration": "delete-water",
         "Hygiene": "delete-hygiene"
     };
-    
     const endpoint = typeMap[type];
     if (!endpoint) return;
-    
     fetch(`/${endpoint}/${id}`, { method: "DELETE" })
         .then(res => res.json())
         .then(() => loadDashboard())
         .catch(err => console.error(err));
 }
 
+/* ── CATEGORIES ──────────────────────────── */
 const categories = [
     { name: "Workout", icon: "🏋️", route: "workout" },
     { name: "Cardio", icon: "🏃", route: "cardio" },
@@ -795,6 +788,7 @@ document.getElementById("catGrid").innerHTML = categories.map(c =>
     </a>`
 ).join("");
 
+/* ── INIT ────────────────────────────────── */
 renderWeekGrid();
 loadDashboard();
 loadUserStats();
