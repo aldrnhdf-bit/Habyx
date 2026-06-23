@@ -3,10 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <title>Habyx Activity Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bangers&display=swap" rel="stylesheet">
 <style>
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+/* XP POPUP */
+.xp-popup {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    font-family: 'Bangers', cursive;
+    font-size: 32px;
+    color: #f59e0b;
+    text-shadow: 3px 3px 0px #92400e, -1px -1px 0 #92400e, 1px -1px 0 #92400e, -1px 1px 0 #92400e;
+    animation: xpPopup 1.2s ease-out forwards;
+    white-space: nowrap;
+}
+@keyframes xpPopup {
+    0%   { opacity: 1; transform: translateY(0px) scale(0.5); }
+    20%  { opacity: 1; transform: translateY(-20px) scale(1.3); }
+    60%  { opacity: 1; transform: translateY(-60px) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-100px) scale(0.9); }
+}
+
+/* LEVEL UP POPUP */
+.levelup-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 99999;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 24px;
+    padding: 40px 60px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 20px 60px rgba(99,102,241,0.5);
+    animation: levelUp 2.5s ease-out forwards;
+}
+@keyframes levelUp {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    15%  { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    25%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    75%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+}
+.levelup-popup h2 {
+    font-family: 'Bangers', cursive;
+    font-size: 52px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+}
+.levelup-popup p { font-size: 18px; opacity: 0.9; }
+.levelup-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99998;
+    animation: fadeOverlay 2.5s ease-out forwards;
+}
+@keyframes fadeOverlay {
+    0%   { opacity: 0; }
+    15%  { opacity: 1; }
+    75%  { opacity: 1; }
+    100% { opacity: 0; }
+}
 
 body {
     background: #f0f4ff;
@@ -42,7 +104,7 @@ body {
 /* STATS */
 .stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin-bottom: 24px;
 }
@@ -314,11 +376,6 @@ body {
 <!-- STATS -->
 <div class="stats-row">
     <div class="stat-card">
-        <div class="stat-accent" style="background:#3b82f6"></div>
-        <div class="label">CURRENT STREAK</div>
-        <div class="value"><span id="s-streak">0</span><span class="unit">days</span></div>
-    </div>
-    <div class="stat-card">
         <div class="stat-accent" style="background:#6366f1"></div>
         <div class="label">TOTAL XP</div>
         <div class="value"><span id="s-xp">0</span><span class="unit">xp</span></div>
@@ -349,18 +406,18 @@ body {
             <circle class="donut-fill" id="donutFill" cx="45" cy="45" r="35"/>
         </svg>
         <div class="donut-label">
-            <div class="donut-pct" id="donut-pct">0%</div>
-            <div class="donut-sub">WEEK</div>
+            <div class="donut-pct" id="donut-pct" style="font-size:13px;">LVL 1</div>
+            <div class="donut-sub">LEVEL</div>
         </div>
     </div>
 
     <div class="xp-info">
-        <h2>Complete This Week</h2>
-        <p>Drag tasks to days and complete them to build your streak</p>
+        <h2 id="xp-level-title">Level 1</h2>
+        <p>Complete tasks to earn XP • Every 50 XP = next level!</p>
         <div class="xp-bar-wrap">
             <div class="xp-bar-label">
-                <span>Weekly Progress</span>
-                <span id="week-label">0 / 7 Days</span>
+                <span>Level Progress</span>
+                <span id="week-label">0 / 50 XP</span>
             </div>
             <div class="xp-bar"><div class="xp-bar-fill" id="xp-bar-fill"></div></div>
         </div>
@@ -369,13 +426,13 @@ body {
     <div class="xp-stats">
         <div class="xp-stat">
             <div class="xp-stat-accent" style="background:#3b82f6"></div>
-            <div class="val" id="xp-days">0</div>
-            <div class="lbl">Days Done</div>
+            <div class="val" id="xp-days">1</div>
+            <div class="lbl">Level</div>
         </div>
         <div class="xp-stat">
             <div class="xp-stat-accent" style="background:#f59e0b"></div>
-            <div class="val">12</div>
-            <div class="lbl">Badges</div>
+            <div class="val" id="xp-this-level">0</div>
+            <div class="lbl">This Level XP</div>
         </div>
         <div class="xp-stat">
             <div class="xp-stat-accent" style="background:#22c55e"></div>
@@ -398,9 +455,12 @@ body {
 
     <!-- WEEKLY PLANNER -->
     <div class="planner-card">
-        <div class="planner-header">
-            <h3>📅 Weekly Planner</h3>
-            <p>Drag tasks from the feed into days • Click to complete</p>
+        <div class="planner-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+            <div>
+                <h3>📅 Weekly Planner</h3>
+                <p>Drag tasks from the feed into days • Click to complete</p>
+            </div>
+            <button onclick="resetAllTasks()" style="background:#f1f5f9; color:#64748b; border:2px solid #e2e8f0; border-radius:10px; padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.borderColor='#94a3b8'" onmouseout="this.style.borderColor='#e2e8f0'">↺ Reset Week</button>
         </div>
         <div class="week-grid" id="weekGrid">
         </div>
@@ -526,50 +586,139 @@ function loadPlannedTasks() {
                 
                 const html = `
                 <div class="planned-task ${task.completed ? 'completed' : ''}" 
-                     onclick="togglePlannedTask(${task.id}, ${!task.completed})"
-                     style="border-color:${style.color}; cursor: pointer;">
-                    <div class="task-name" style="color:${style.color}">${task.task_type}</div>
-                    <div style="color:#334155; font-size:10px; margin: 3px 0;">${task.task_name}</div>
-                    <div class="task-time">${task.completed ? '✓ Done' : 'Click to complete'}</div>
+                     style="border-color:${style.color}; display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div onclick="togglePlannedTask(${task.id}, ${!task.completed}, event)" style="flex: 1; cursor: pointer;">
+                        <div class="task-name" style="color:${style.color}">${task.task_type}</div>
+                        <div style="color:#334155; font-size:10px; margin: 3px 0;">${task.task_name}</div>
+                        <div class="task-time">${task.completed ? '✓ Done' : 'Click to complete'}</div>
+                    </div>
+                    <button style="background:none; border:none; color:#cbd5e1; cursor:pointer; padding:2px 6px; opacity:0.5; transition:opacity 0.2s; font-size:12px;" onclick="deletePlannedTask(${task.id}, event)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'" title="Delete">🗑</button>
                 </div>`;
                 
                 dayTasks.innerHTML += html;
             });
-            
-            updateWeekProgress(tasks);
         })
         .catch(err => console.error(err));
 }
 
-function togglePlannedTask(id, completed) {
+/* ── XP POPUP ──────────────────────────────── */
+function showXpPopup(x, y, amount) {
+    const popup = document.createElement('div');
+    popup.className = 'xp-popup';
+    popup.innerText = `+${amount} XP! ⭐`;
+    popup.style.left = x + 'px';
+    popup.style.top  = y + 'px';
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 1300);
+}
+
+function showLevelUpPopup(newLevel) {
+    const overlay = document.createElement('div');
+    overlay.className = 'levelup-overlay';
+    document.body.appendChild(overlay);
+    const popup = document.createElement('div');
+    popup.className = 'levelup-popup';
+    popup.innerHTML = `
+        <h2>🎉 LEVEL UP! 🎉</h2>
+        <p>You reached <strong>Level ${newLevel}</strong>!</p>
+        <p style="font-size:14px;margin-top:8px;opacity:0.8;">Keep completing tasks to level up!</p>
+    `;
+    document.body.appendChild(popup);
+    setTimeout(() => { overlay.remove(); popup.remove(); }, 2600);
+}
+
+/* ── UPDATE XP UI ─────────────────────────── */
+function updateXpUI(totalXp) {
+    const XP_PER_LEVEL = 50;
+    const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
+    const xpThisLevel = totalXp % XP_PER_LEVEL;
+    const pct = Math.round((xpThisLevel / XP_PER_LEVEL) * 100);
+
+    document.getElementById('s-xp').innerText = totalXp.toLocaleString();
+    document.getElementById('xp-total').innerText = totalXp.toLocaleString();
+    document.getElementById('xp-days').innerText = level;
+    document.getElementById('xp-this-level').innerText = xpThisLevel;
+    document.getElementById('xp-level-title').innerText = `Level ${level}`;
+    document.getElementById('donut-pct').innerText = `LVL ${level}`;
+    document.getElementById('week-label').innerText = `${xpThisLevel} / ${XP_PER_LEVEL} XP`;
+    document.getElementById('xp-bar-fill').style.width = pct + '%';
+    const circumference = 2 * Math.PI * 35;
+    const fill = document.getElementById('donutFill');
+    if (fill) fill.style.strokeDashoffset = circumference * (1 - pct / 100);
+}
+
+/* ── TOGGLE TASK ──────────────────────────── */
+function togglePlannedTask(id, completed, event) {
     const today = new Date().toISOString().split('T')[0];
-    
     fetch(`/toggle-planned-task/${id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            completed: completed,
-            date_completed: completed ? today : null
-        })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed, date_completed: completed ? today : null })
     })
+    .then(res => res.json())
+    .then(() => {
+        if (completed && event) {
+            showXpPopup(event.clientX - 20, event.clientY - 20, 5);
+            fetch('/add-xp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ xp: 5 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const prevLevel = Math.floor((data.total_xp - 5) / 50) + 1;
+                const newLevel  = Math.floor(data.total_xp / 50) + 1;
+                updateXpUI(data.total_xp);
+                if (newLevel > prevLevel) setTimeout(() => showLevelUpPopup(newLevel), 800);
+            });
+        }
+        loadPlannedTasks();
+    })
+    .catch(err => console.error(err));
+}
+
+/* ── DELETE PLANNED TASK ──────────────────── */
+function resetAllTasks() {
+    if (!confirm('Untick all tasks for the week?')) return;
+    fetch('/reset-week', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Reset error:', data.error);
+            alert('Error resetting tasks: ' + data.error);
+        } else {
+            console.log('Reset successful:', data);
+            loadPlannedTasks();
+        }
+    })
+    .catch(err => {
+        console.error('Reset week error:', err);
+        alert('Error resetting tasks: ' + err.message);
+    });
+}
+
+function deletePlannedTask(id, event) {
+    event.stopPropagation();
+    if (!confirm('Delete this task?')) return;
+    fetch(`/delete-planned-task/${id}`, { method: 'DELETE' })
     .then(res => res.json())
     .then(() => loadPlannedTasks())
     .catch(err => console.error(err));
 }
 
-function updateWeekProgress(tasks) {
-    const completedDays = new Set(tasks.filter(t => t.completed).map(t => t.day)).size;
-    const pct = Math.round((completedDays / 7) * 100);
-    
-    document.getElementById("s-week").innerText = completedDays;
-    document.getElementById("xp-days").innerText = completedDays;
-    document.getElementById("week-label").innerText = `${completedDays} / 7 Days`;
-    document.getElementById("xp-bar-fill").style.width = pct + "%";
-    document.getElementById("donut-pct").innerText = pct + "%";
-    
-    const circumference = 2 * Math.PI * 35;
-    const fill = document.getElementById("donutFill");
-    if (fill) fill.style.strokeDashoffset = circumference * (1 - pct / 100);
+/* ── LOAD USER STATS ─────────────────────── */
+function loadUserStats() {
+    fetch('/get-user-stats')
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) return;
+            updateXpUI(data.total_xp || 0);
+        })
+        .catch(err => console.error(err));
 }
 
 function loadDashboard() {
@@ -627,18 +776,6 @@ function deleteTask(type, id) {
     fetch(`/${endpoint}/${id}`, { method: "DELETE" })
         .then(res => res.json())
         .then(() => loadDashboard())
-        .catch(err => console.error(err));
-}
-
-function loadUserStats() {
-    fetch("/get-user-stats")
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) return;
-            document.getElementById("s-streak").innerText = data.current_streak || 0;
-            document.getElementById("s-xp").innerText = (data.total_xp || 0).toLocaleString();
-            document.getElementById("xp-total").innerText = (data.total_xp || 0).toLocaleString();
-        })
         .catch(err => console.error(err));
 }
 
