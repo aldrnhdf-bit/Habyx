@@ -39,6 +39,26 @@ body {
     font-size: 13px;
     color: #94a3b8; }
 .welcome-badge strong { font-size: 14px; color: #1e293b; display: block; }
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.header-link-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b82f6;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+.header-link-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
 .avatar {
     width: 36px; height: 36px; border-radius: 50%;
     background: linear-gradient(135deg, #3b82f6, #6366f1);
@@ -235,6 +255,35 @@ body {
 .empty-log { text-align: center; padding: 20px 0; color: #cbd5e1; font-size: 13px; }
 .empty-log .icon { font-size: 28px; margin-bottom: 8px; }
 
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(15, 23, 42, 0.95);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        z-index: 9999;
+    }
+    .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .toast-icon {
+        font-size: 18px;
+        line-height: 1;
+    }
+    .toast-message {
+        font-size: 14px;
+    }
 </style>
 </head>
 <body>
@@ -245,9 +294,10 @@ body {
         <h1>🏃 Cardio Training</h1>
         <p>Select an activity and set your time or distance goal</p>
     </div>
-    
-    
-        <div class="avatar">YN</div>
+    <div class="header-actions">
+        <a href="/dashboard" class="header-link-btn">📊 Dashboard</a>
+        <a href="/activity" class="header-link-btn">🏠 Activity Hub</a>
+        <div class="avatar">{{ initials }}</div>
     </div>
 </div>
 
@@ -577,7 +627,7 @@ function updateAI() {
 }
 
 function addRoutine() {
-    if (!currentActivity) { alert("Select an activity first!"); return; }
+    if (!currentActivity) { showToast("Select an activity first!", true); return; }
     const target = mode === "time" ? selectedMinutes + " min" : km + " km";
     
     // Save to database
@@ -595,9 +645,29 @@ function addRoutine() {
         sessions.push({ emoji: currentEmoji, name: currentActivity, target, mode });
         document.getElementById("s-sessions").innerText = sessions.length;
         renderLog();
-        alert("✅ " + currentActivity + " saved!");
+        showToast("✅ " + currentActivity + " saved!");
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error(err);
+        showToast("Unable to save workout.", true);
+    });
+}
+
+function showToast(message, error = false) {
+    let toast = document.getElementById('page-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'page-toast';
+        toast.className = 'toast';
+        toast.innerHTML = `<div class="toast-icon">✓</div><div class="toast-message"></div>`;
+        document.body.appendChild(toast);
+    }
+    toast.querySelector('.toast-message').textContent = message;
+    toast.querySelector('.toast-icon').textContent = error ? '⚠️' : '✓';
+    toast.style.background = error ? 'rgba(220, 38, 38, 0.95)' : 'rgba(15, 23, 42, 0.95)';
+    toast.classList.add('show');
+    clearTimeout(window._pageToastTimeout);
+    window._pageToastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 function renderLog() {

@@ -94,6 +94,26 @@ body {
 }
 .welcome-badge span { font-size: 13px; color: #64748b; }
 .welcome-badge strong { font-size: 14px; color: #1e293b; display: block; }
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.header-link-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b82f6;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+.header-link-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
 .avatar {
     width: 36px; height: 36px; border-radius: 50%;
     background: linear-gradient(135deg, #3b82f6, #6366f1);
@@ -155,7 +175,7 @@ body {
 .xp-info { flex: 1; }
 .xp-info h2 { font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
 .xp-info p { font-size: 13px; color: #64748b; margin-bottom: 12px; }
-.xp-bar-wrap { }
+.xp-bar-wrap { margin-top: 8px; }
 .xp-bar-label {
     display: flex; justify-content: space-between;
     font-size: 11px; color: #94a3b8; margin-bottom: 5px;
@@ -367,9 +387,12 @@ body {
         <h1>Habyx Activity Hub</h1>
         <p>Track every habit, every day</p>
     </div>
-    <div class="welcome-badge">
-        <div><span>Welcome back</span><strong>Your Name</strong></div>
-        <div class="avatar">YN</div>
+    <div class="header-actions">
+        <a href="/dashboard" class="header-link-btn">📊 Dashboard</a>
+        <div class="welcome-badge">
+            <div><span>Welcome back</span><strong>{{ username }}</strong></div>
+            <div class="avatar">{{ initials }}</div>
+        </div>
     </div>
 </div>
 
