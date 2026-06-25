@@ -16,6 +16,9 @@
       </a>
 
       <div class="profile">
+        <a class="profile-link" href="{{ url_for('login') }}">
+          {{ "Edit login data" if is_logged_in else "Login" }}
+        </a>
         <div>
           <p class="profile-kicker">Welcome back</p>
           <h1>{{ user.name }}</h1>
@@ -118,6 +121,32 @@
             <p class="eyebrow">AI Coach</p>
             <h2>{{ ai_coach.focus }}</h2>
             <p>{{ ai_coach.message }}</p>
+          </section>
+
+          <section class="panel user-data-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Login</p>
+                <h2>User Data</h2>
+              </div>
+              {% if is_logged_in %}
+                <a class="panel-link" href="{{ url_for('logout') }}">Logout</a>
+              {% endif %}
+            </div>
+
+            {% if login_details %}
+              <dl class="data-list">
+                {% for label, value in login_details %}
+                  <div>
+                    <dt>{{ label }}</dt>
+                    <dd>{{ value }}</dd>
+                  </div>
+                {% endfor %}
+              </dl>
+            {% else %}
+              <p class="empty-state">No login data yet.</p>
+              <a class="panel-button" href="{{ url_for('login') }}">Login</a>
+            {% endif %}
           </section>
 
           <section class="panel achievements-panel">

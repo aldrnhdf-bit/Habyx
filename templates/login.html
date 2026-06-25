@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habyx Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+  <div class="app-shell login-shell">
+    <header class="topbar">
+      <a class="brand" href="{{ url_for('dashboard') }}" aria-label="Habyx dashboard">
+        <span class="brand-mark">H</span>
+        <span>Habyx</span>
+      </a>
+    </header>
+
+    <main class="login-layout">
+      <section class="login-card">
+        <p class="eyebrow">Login data</p>
+        <h1>Enter Your Dashboard Details</h1>
+
+        <form class="login-form" action="{{ url_for('login') }}" method="post">
+          <label>
+            Full name
+            <input type="text" name="name" value="{{ user.name }}" required>
+          </label>
+
+          <label>
+            Username
+            <input type="text" name="username" value="{{ user.username | default('') }}">
+          </label>
+
+          <label>
+            Email
+            <input type="email" name="email" value="{{ user.email | default('') }}">
+          </label>
+
+          <label>
+            Dashboard title
+            <input type="text" name="title" value="{{ user.title }}" required>
+          </label>
+
+          <label class="full-row">
+            Focus for today
+            <input type="text" name="focus" value="{{ user.focus | default('') }}" placeholder="Example: Finish health habits">
+          </label>
+
+          <label>
+            Current streak
+            <input type="number" name="streak" min="0" value="{{ stats[0].value }}" required>
+          </label>
+
+          <label>
+            Current level
+            <input type="number" name="level" min="0" value="{{ xp.level }}" required>
+          </label>
+
+          <label>
+            Current XP
+            <input type="number" name="current_xp" min="0" value="{{ xp.current }}" required>
+          </label>
+
+          <label>
+            XP for next level
+            <input type="number" name="next_level" min="1" value="{{ xp.next_level }}" required>
+          </label>
+
+          <label>
+            Achievements
+            <input type="number" name="achievements" min="0" value="{{ stats[3].value }}" required>
+          </label>
+
+          <div class="form-actions full-row">
+            <a class="ghost-button" href="{{ url_for('dashboard') }}">Dashboard</a>
+            <button type="submit">Login</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
