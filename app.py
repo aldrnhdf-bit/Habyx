@@ -1,104 +1,56 @@
-from flask import Flask, render_template
+import json
+from pathlib import Path
+
+from flask import Flask, abort, render_template
 
 app = Flask(__name__)
+
+BASE_DIR = Path(__file__).resolve().parent
+USER_DATA_FILE = BASE_DIR / "user.txt"
+REQUIRED_DATA_SECTIONS = (
+    "user",
+    "stats",
+    "xp",
+    "habits",
+    "ai_coach",
+    "achievements",
+    "weekly_completion",
+)
+
+
+def load_dashboard_data(data_file=USER_DATA_FILE):
+    try:
+        raw_data = data_file.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise ValueError(f"Missing data file: {data_file.name}") from exc
+
+    try:
+        dashboard_data = json.loads(raw_data)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"{data_file.name} must contain valid JSON. Error on line {exc.lineno}."
+        ) from exc
+
+    missing_sections = [
+        section for section in REQUIRED_DATA_SECTIONS if section not in dashboard_data
+    ]
+    if missing_sections:
+        missing = ", ".join(missing_sections)
+        raise ValueError(f"{data_file.name} is missing required section(s): {missing}.")
+
+    return dashboard_data
 
 
 @app.route("/")
 def dashboard():
-    user = {
-        "name": "Qhezrul Zinedine",
-        "title": "Habyx",
-        "avatar_initials": "QZ",
-    }
-
-    stats = [
-        {"label": "Current Streak", "value": "18", "unit": "days", "accent": "violet"},
-        {"label": "Current Level", "value": "7", "unit": "level", "accent": "blue"},
-        {"label": "Current XP", "value": "2,430", "unit": "xp", "accent": "orange"},
-        {"label": "Achievements", "value": "12", "unit": "badges", "accent": "green"},
-    ]
-
-    xp = {
-        "level": 7,
-        "current": 2430,
-        "next_level": 3000,
-        "percent": 81,
-        "remaining": 570,
-    }
-
-    habits = [
-        {
-            "name": "Morning stretch",
-            "time": "7:15 AM",
-            "category": "Energy",
-            "completed": True,
-            "xp": 45,
-        },
-        {
-            "name": "Drink 2L water",
-            "time": "All day",
-            "category": "Health",
-            "completed": True,
-            "xp": 35,
-        },
-        {
-            "name": "Read 10 pages",
-            "time": "8:30 PM",
-            "category": "Mind",
-            "completed": False,
-            "xp": 50,
-        },
-        {
-            "name": "No phone wind-down",
-            "time": "10:00 PM",
-            "category": "Sleep",
-            "completed": False,
-            "xp": 60,
-        },
-    ]
-
-    ai_coach = {
-        "message": "You finish health habits most consistently before noon. Try moving reading to lunch today for an easy XP win.",
-        "focus": "Best next habit: Read 10 pages",
-    }
-
-    achievements = [
-        {
-            "name": "18-Day Flame",
-            "description": "Kept your streak alive for 18 days.",
-            "unlocked": True,
-        },
-        {
-            "name": "Hydration Hero",
-            "description": "Completed water goals five times this week.",
-            "unlocked": True,
-        },
-        {
-            "name": "Night Owl Reset",
-            "description": "Complete wind-down three nights in a row.",
-            "unlocked": False,
-        },
-        {
-            "name": "Level 8 Spark",
-            "description": "Reach Level 8 with 3,000 total XP.",
-            "unlocked": False,
-        },
-    ]
-
-    weekly_completion = {
-        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        "values": [72, 86, 64, 92, 78, 88, 95],
-    }
+    try:
+        dashboard_data = load_dashboard_data()
+    except ValueError as exc:
+        abort(500, description=str(exc))
 
     return render_template(
         "dashboard.html",
-        user=user,
-        stats=stats,
-        xp=xp,
-        habits=habits,
-        ai_coach=ai_coach,
-        achievements=achievements,
-        weekly_completion=weekly_completion,
+        **dashboard_data,
     )
 
 
