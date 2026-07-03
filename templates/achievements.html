@@ -391,9 +391,6 @@
         <button class="category-btn" onclick="filterAchievements('level')">
           Levels
         </button>
-        <button class="category-btn" onclick="filterAchievements('daily')">
-          Daily
-        </button>
       </div>
 
       <!-- ACHIEVEMENTS GRID -->
@@ -574,38 +571,6 @@
           tier: null,
         },
 
-        // DAILY ACHIEVEMENTS
-        {
-          id: 17,
-          name: "Daily Driver",
-          icon: "🚀",
-          description: "Complete tasks 3 days in a row",
-          category: "daily",
-          target: 3,
-          type: "daily_activity",
-          tier: "I",
-        },
-        {
-          id: 18,
-          name: "Daily Driver",
-          icon: "🚀",
-          description: "Complete tasks 7 days in a row",
-          category: "daily",
-          target: 7,
-          type: "daily_activity",
-          tier: "II",
-        },
-        {
-          id: 19,
-          name: "Daily Driver",
-          icon: "🚀",
-          description: "Complete tasks 14 days in a row",
-          category: "daily",
-          target: 14,
-          type: "daily_activity",
-          tier: "III",
-        },
-
         // LEGEND ACHIEVEMENT
         {
           id: 20,
@@ -733,8 +698,6 @@
             return (stats.total_xp || 0) >= ach.target;
           case "week_completion":
             return (stats.week_completed || 0) >= ach.target;
-          case "daily_activity":
-            return (stats.daily_activity_days || 0) >= ach.target;
           default:
             return false;
         }
@@ -759,9 +722,6 @@
             break;
           case "week_completion":
             current = stats.week_completed || 0;
-            break;
-          case "daily_activity":
-            current = stats.daily_activity_days || 0;
             break;
         }
 
