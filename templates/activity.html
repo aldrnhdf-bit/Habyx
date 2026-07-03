@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Habyx Activity Hub</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bangers&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* XP POPUP */
+      .xp-popup {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        font-family: "Bangers", cursive;
+        font-size: 32px;
+        color: #f59e0b;
+        text-shadow:
+          3px 3px 0px #92400e,
+          -1px -1px 0 #92400e,
+          1px -1px 0 #92400e,
+          -1px 1px 0 #92400e;
+        animation: xpPopup 1.2s ease-out forwards;
+        white-space: nowrap;
+      }
+      @keyframes xpPopup {
+        0% {
+          opacity: 1;
+          transform: translateY(0px) scale(0.5);
+        }
+        20% {
+          opacity: 1;
+          transform: translateY(-20px) scale(1.3);
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(-60px) scale(1.1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-100px) scale(0.9);
+        }
+      }
+
+      /* LEVEL UP POPUP */
+      .levelup-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        z-index: 99999;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-radius: 24px;
+        padding: 40px 60px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 20px 60px rgba(99, 102, 241, 0.5);
+        animation: levelUp 2.5s ease-out forwards;
+      }
+      @keyframes levelUp {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0;
+        }
+        15% {
+          transform: translate(-50%, -50%) scale(1.1);
+          opacity: 1;
+        }
+        25% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+        75% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(0.8);
+          opacity: 0;
+        }
+      }
+      .levelup-popup h2 {
+        font-family: "Bangers", cursive;
+        font-size: 52px;
+        letter-spacing: 3px;
+        margin-bottom: 8px;
+        text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+      }
+      .levelup-popup p {
+        font-size: 18px;
+        opacity: 0.9;
+      }
+      .levelup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 99998;
+        animation: fadeOverlay 2.5s ease-out forwards;
+      }
+      @keyframes fadeOverlay {
+        0% {
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        75% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      body {
+        background: #f0f4ff;
+        color: #1e293b;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      /* HEADER */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+      .header-left h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .header-left p {
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 2px;
+      }
+
+      .welcome-badge {
+        background: white;
+        border-radius: 50px;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .welcome-badge span {
+        font-size: 13px;
+        color: #64748b;
+      }
+      .welcome-badge strong {
+        font-size: 14px;
+        color: #1e293b;
+        display: block;
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-link-btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #3b82f6;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      .header-link-btn:hover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      /* STATS */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 18px 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .stat-accent {
+        height: 3px;
+        width: 32px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      .stat-card .label {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+      }
+      .stat-card .value {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .stat-card .unit {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-left: 3px;
+      }
+
+      /* XP PROGRESS CARD */
+      .xp-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px 28px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .donut-wrap {
+        position: relative;
+        width: 90px;
+        height: 90px;
+        flex-shrink: 0;
+      }
+      .donut-wrap svg {
+        width: 90px;
+        height: 90px;
+        transform: rotate(-90deg);
+      }
+      .donut-bg {
+        fill: none;
+        stroke: #e2e8f0;
+        stroke-width: 9;
+      }
+      .donut-fill {
+        fill: none;
+        stroke: url(#donutGrad);
+        stroke-width: 9;
+        stroke-linecap: round;
+        stroke-dasharray: 220;
+        stroke-dashoffset: 220;
+        transition: stroke-dashoffset 0.6s ease;
+      }
+      .donut-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      .donut-pct {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .donut-sub {
+        font-size: 9px;
+        color: #94a3b8;
+      }
+
+      .xp-info {
+        flex: 1;
+      }
+      .xp-info h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 4px;
+      }
+      .xp-info p {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 12px;
+      }
+      .xp-bar-wrap {
+        margin-top: 8px;
+      }
+      .xp-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #94a3b8;
+        margin-bottom: 5px;
+      }
+      .xp-bar {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .xp-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #3b82f6, #6366f1);
+        border-radius: 10px;
+        transition: width 0.4s ease;
+      }
+
+      .xp-stats {
+        display: flex;
+        gap: 20px;
+        margin-left: auto;
+      }
+      .xp-stat {
+        text-align: center;
+      }
+      .xp-stat .val {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .xp-stat .lbl {
+        font-size: 11px;
+        color: #94a3b8;
+      }
+      .xp-stat-accent {
+        height: 3px;
+        width: 24px;
+        border-radius: 4px;
+        margin: 0 auto 6px;
+      }
+
+      /* MAIN LAYOUT */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 20px;
+        align-items: start;
+      }
+
+      /* CATEGORIES */
+      .categories-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 16px;
+      }
+      .section-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #94a3b8;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .cat-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        color: #1e293b;
+        display: block;
+      }
+      .cat-card:hover {
+        border-color: #93c5fd;
+        background: #eff6ff;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.12);
+      }
+      .cat-icon {
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+      .cat-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
+      }
+      .cat-xp {
+        font-size: 11px;
+        color: #3b82f6;
+        margin-top: 3px;
+      }
+
+      /* PLANNER CARD */
+      .planner-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .planner-header h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 2px;
+      }
+      .planner-header p {
+        font-size: 11px;
+        color: #94a3b8;
+      }
+
+      .week-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+      }
+
+      .day-column {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 14px 10px;
+        min-height: 320px;
+        transition: all 0.2s;
+        cursor: grab;
+      }
+
+      .day-column:hover {
+        border-color: #bfdbfe;
+      }
+      .day-column.drag-over {
+        background: #eff6ff;
+        border-color: #3b82f6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+      }
+
+      .day-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .day-tasks {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .planned-task {
+        background: white;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 8px 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 11px;
+      }
+
+      .planned-task:hover {
+        border-color: #93c5fd;
+        background: #eff6ff;
+      }
+
+      .planned-task.completed {
+        background: #f0fdf4;
+        border-color: #22c55e;
+        opacity: 0.8;
+      }
+
+      .task-name {
+        font-weight: 700;
+        margin-bottom: 2px;
+        font-size: 11px;
+      }
+
+      .task-time {
+        font-size: 9px;
+        color: #94a3b8;
+        margin-top: 3px;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .ai-card {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-radius: 20px;
+        padding: 20px;
+        color: white;
+      }
+      .ai-badge {
+        font-size: 10px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 10px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+        display: inline-block;
+        letter-spacing: 0.5px;
+      }
+      .ai-card h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .ai-card p {
+        font-size: 12px;
+        opacity: 0.85;
+        line-height: 1.6;
+      }
+
+      .feed-card {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .feed-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .feed-header h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .live-dot {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        color: #22c55e;
+        font-weight: 600;
+      }
+      .live-dot::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #22c55e;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.4;
+          transform: scale(0.8);
+        }
+      }
+
+      .feed-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        background: #f8fafc;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        border: 1.5px solid #e2e8f0;
+        transition: border-color 0.2s;
+        cursor: grab;
+      }
+      .feed-item:hover {
+        border-color: #bfdbfe;
+      }
+      .feed-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 5px;
+        flex-shrink: 0;
+      }
+      .feed-type {
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+      .feed-text {
+        font-size: 12px;
+        color: #64748b;
+      }
+      .empty-feed {
+        text-align: center;
+        padding: 20px 0;
+        color: #cbd5e1;
+        font-size: 13px;
+      }
+      .empty-feed .icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+
+      /* XP CHART */
+      .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        height: 120px;
+        margin-top: 8px;
+      }
+      .chart-bar-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        height: 100%;
+        justify-content: flex-end;
+      }
+      .chart-bar {
+        width: 100%;
+        border-radius: 6px 6px 0 0;
+        background: linear-gradient(180deg, #6366f1, #3b82f6);
+        min-height: 4px;
+        transition: height 0.5s ease;
+        position: relative;
+      }
+      .chart-bar.today {
+        background: linear-gradient(180deg, #f59e0b, #f97316);
+      }
+      .chart-bar-val {
+        font-size: 10px;
+        font-weight: 700;
+        color: #64748b;
+      }
+      .chart-bar-day {
+        font-size: 10px;
+        color: #94a3b8;
+        font-weight: 600;
+      }
+
+      /* CARD TITLE */
+      .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      /* TASK STYLES */
+      .task-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .task-row:last-child {
+        border-bottom: none;
+      }
+      .task-chk {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 2px solid #e2e8f0;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+      }
+      .task-chk.done {
+        background: #22c55e;
+        border-color: #22c55e;
+        color: white;
+      }
+      .task-info {
+        flex: 1;
+      }
+      .task-type-s {
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .task-name-s {
+        font-size: 10px;
+        color: #94a3b8;
+      }
+      .empty-s {
+        text-align: center;
+        padding: 16px 0;
+        color: #cbd5e1;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <h1>Habyx Activity Hub</h1>
+        <p>Track every habit, every day</p>
+      </div>
+      <div class="header-actions">
+        <a href="/dashboard" class="header-link-btn">📊 Dashboard</a>
+        <div class="welcome-badge">
+          <div><span>Welcome back</span><strong>{{ username }}</strong></div>
+          <div class="avatar">{{ initials }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-accent" style="background: #6366f1"></div>
+        <div class="label">TOTAL XP</div>
+        <div class="value">
+          <span id="s-xp">0</span><span class="unit">xp</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-accent" style="background: #f59e0b"></div>
+        <div class="label">THIS WEEK</div>
+        <div class="value">
+          <span id="s-week">0</span><span class="unit">/ 7 days</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- XP PROGRESS CARD -->
+    <div class="xp-card">
+      <div class="donut-wrap">
+        <svg viewBox="0 0 90 90">
+          <defs>
+            <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color: #3b82f6" />
+              <stop offset="100%" style="stop-color: #6366f1" />
+            </linearGradient>
+          </defs>
+          <circle class="donut-bg" cx="45" cy="45" r="35" />
+          <circle class="donut-fill" id="donutFill" cx="45" cy="45" r="35" />
+        </svg>
+        <div class="donut-label">
+          <div class="donut-pct" id="donut-pct" style="font-size: 13px">
+            LVL 1
+          </div>
+          <div class="donut-sub">LEVEL</div>
+        </div>
+      </div>
+
+      <div class="xp-info">
+        <h2 id="xp-level-title">Level 1</h2>
+        <p>Complete tasks to earn XP • Every 50 XP = next level!</p>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar-label">
+            <span>Level Progress</span>
+            <span id="week-label">0 / 50 XP</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-bar-fill" id="xp-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="xp-stats">
+        <div class="xp-stat">
+          <div class="xp-stat-accent" style="background: #3b82f6"></div>
+          <div class="val" id="xp-days">1</div>
+          <div class="lbl">Level</div>
+        </div>
+        <div class="xp-stat">
+          <div class="xp-stat-accent" style="background: #f59e0b"></div>
+          <div class="val" id="xp-this-level">0</div>
+          <div class="lbl">This Level XP</div>
+        </div>
+        <div class="xp-stat">
+          <div class="xp-stat-accent" style="background: #22c55e"></div>
+          <div class="val" id="xp-total">0</div>
+          <div class="lbl">Total XP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-grid">
+      <div>
+        <!-- CATEGORIES -->
+        <div class="categories-card">
+          <div class="section-label">Activity Categories</div>
+          <div class="cat-grid" id="catGrid"></div>
+        </div>
+
+        <!-- WEEKLY PLANNER -->
+        <div class="planner-card">
+          <div
+            class="planner-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              margin-bottom: 16px;
+            "
+          >
+            <div>
+              <h3>📅 Weekly Planner</h3>
+              <p>Drag tasks from the feed into days • Click to complete</p>
+            </div>
+            <button
+              onclick="resetAllTasks()"
+              style="
+                background: #f1f5f9;
+                color: #64748b;
+                border: 2px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 8px 16px;
+                font-size: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s;
+              "
+              onmouseover="this.style.borderColor = '#94a3b8'"
+              onmouseout="this.style.borderColor = '#e2e8f0'"
+            >
+              ↺ Reset Week
+            </button>
+          </div>
+          <div class="week-grid" id="weekGrid"></div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <!-- AI COACH -->
+        <div class="ai-card">
+          <div class="ai-badge">✦ AI COACH</div>
+          <h3>Build your streak!</h3>
+          <p>
+            Drag tasks from the activity feed to the weekly planner. Click on a
+            task to mark it complete and build your daily streak.
+          </p>
+        </div>
+
+        <!-- LIVE FEED -->
+        <div class="feed-card">
+          <div class="feed-header">
+            <h3>📊 Activity Feed</h3>
+            <div class="live-dot">LIVE</div>
+          </div>
+          <div id="feed">
+            <div class="empty-feed">
+              <div class="icon">📊</div>
+              <p>Loading your feed…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const typeColors = {
+        Workout: { color: "#3b82f6" },
+        Nutrition: { color: "#22c55e" },
+        Hygiene: { color: "#f59e0b" },
+        Hydration: { color: "#06b6d4" },
+        Cardio: { color: "#6366f1" },
+        default: { color: "#94a3b8" },
+      };
+
+      // Dashboard synced constants
+      const XP_PER_LEVEL = 50;
+      const LEVEL_TITLES = [
+        "Beginner",
+        "Rookie",
+        "Athlete",
+        "Champion",
+        "Legend",
+        "Master",
+        "Elite",
+        "Grandmaster",
+      ];
+      const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const TIPS = [
+        "💧 Drink a glass of water first thing in the morning to kickstart your metabolism.",
+        "🏋️ Consistency beats intensity — even a 10-minute workout counts!",
+        "🥗 Protein at every meal helps muscle recovery and keeps you full longer.",
+        "😴 Sleep is when your body repairs itself — aim for 7-8 hours tonight.",
+        "🏃 A 20-minute walk after meals improves digestion and blood sugar levels.",
+        "🪥 Your morning routine sets the tone for the whole day — keep it strong!",
+        "⭐ Every task earns XP — keep the momentum going!",
+      ];
+      const TYPE_COLORS = {
+        Workout: "#3b82f6",
+        Nutrition: "#22c55e",
+        Hygiene: "#f59e0b",
+        Hydration: "#06b6d4",
+        Cardio: "#6366f1",
+      };
+
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+
+      function handleDragStart(event, type, text, id) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("type", type);
+        event.dataTransfer.setData("text", text);
+        event.dataTransfer.setData("id", id);
+        event.dataTransfer.setData("source", "feed");
+        event.target.closest(".feed-item").style.opacity = "0.5";
+      }
+
+      function handleDragEnd(event) {
+        event.target.closest(".feed-item").style.opacity = "1";
+      }
+
+      function dragOverDay(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        event.currentTarget.classList.add("drag-over");
+      }
+
+      function dragLeaveDay(event) {
+        event.currentTarget.classList.remove("drag-over");
+      }
+
+      function handleDayDrop(event, dayIndex) {
+        event.preventDefault();
+        event.currentTarget.classList.remove("drag-over");
+
+        const type = event.dataTransfer.getData("type");
+        const text = event.dataTransfer.getData("text");
+        const id = event.dataTransfer.getData("id");
+        const source = event.dataTransfer.getData("source");
+
+        if (source !== "feed") return;
+
+        fetch("/save-planned-task", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            task_name: text,
+            task_type: type,
+            day: dayIndex,
+            time: "Anytime",
+          }),
+        })
+          .then((res) => res.json())
+          .then(() => {
+            loadPlannedTasks();
+            deleteTaskSilent(type, id);
+          })
+          .catch((err) => console.error(err));
+      }
+
+      function renderWeekGrid() {
+        const html = days
+          .map(
+            (day, idx) => `
+        <div class="day-column" 
+             ondrop="handleDayDrop(event, ${idx})"
+             ondragover="dragOverDay(event)"
+             ondragleave="dragLeaveDay(event)">
+            <div class="day-title">${day}</div>
+            <div class="day-tasks" id="day-${idx}"></div>
+        </div>
+    `,
+          )
+          .join("");
+
+        document.getElementById("weekGrid").innerHTML = html;
+        loadPlannedTasks();
+      }
+
+      function loadPlannedTasks() {
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+
+        fetch("/get-planned-tasks")
+          .then((res) => res.json())
+          .then((tasks) => {
+            for (let i = 0; i < 7; i++) {
+              document.getElementById(`day-${i}`).innerHTML = "";
+            }
+
+            tasks.forEach((task) => {
+              const dayTasks = document.getElementById(`day-${task.day}`);
+              const style = typeColors[task.task_type] || typeColors.default;
+              const isToday = task.day === todayIdx;
+              const isLocked = !isToday;
+
+              const html = `
+                <div class="planned-task ${task.completed ? "completed" : ""}" 
+                     style="border-color:${style.color}; display: flex; justify-content: space-between; align-items: flex-start; ${isLocked ? "opacity: 0.6;" : ""}">
+                    <div onclick="${isLocked ? "" : `togglePlannedTask(${task.id}, ${!task.completed}, event)`}" style="flex: 1; ${isLocked ? "cursor: not-allowed; color: #94a3b8;" : "cursor: pointer;"}">
+                        <div class="task-name" style="color:${style.color}">${task.task_type}</div>
+                        <div style="color:#334155; font-size:10px; margin: 3px 0;">${task.task_name}</div>
+                        <div class="task-time">${isLocked ? "🔒 Locked" : task.completed ? "✓ Done" : "Click to complete"}</div>
+                    </div>
+                    <button style="background:none; border:none; color:#cbd5e1; cursor:pointer; padding:2px 6px; opacity:0.5; transition:opacity 0.2s; font-size:12px;" onclick="deletePlannedTask(${task.id}, event)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'" title="Delete">🗑</button>
+                </div>`;
+
+              dayTasks.innerHTML += html;
+            });
+          })
+          .catch((err) => console.error(err));
+      }
+
+      /* ── XP POPUP ──────────────────────────────── */
+      function showXpPopup(x, y, amount) {
+        const popup = document.createElement("div");
+        popup.className = "xp-popup";
+        const sign = amount >= 0 ? "+" : "";
+        popup.innerText = `${sign}${amount} XP! ⭐`;
+        popup.style.left = x + "px";
+        popup.style.top = y + "px";
+        if (amount < 0) {
+          popup.style.color = "#ef4444";
+        }
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 1300);
+      }
+
+      function showLevelUpPopup(newLevel) {
+        const overlay = document.createElement("div");
+        overlay.className = "levelup-overlay";
+        document.body.appendChild(overlay);
+        const popup = document.createElement("div");
+        popup.className = "levelup-popup";
+        popup.innerHTML = `
+        <h2>🎉 LEVEL UP! 🎉</h2>
+        <p>You reached <strong>Level ${newLevel}</strong>!</p>
+        <p style="font-size:14px;margin-top:8px;opacity:0.8;">Keep completing tasks to level up!</p>
+    `;
+        document.body.appendChild(popup);
+        setTimeout(() => {
+          overlay.remove();
+          popup.remove();
+        }, 2600);
+      }
+
+      /* ── UPDATE XP UI ─────────────────────────── */
+      function updateXpUI(totalXp) {
+        const XP_PER_LEVEL = 50;
+        const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
+        const xpThisLevel = totalXp % XP_PER_LEVEL;
+        const pct = Math.round((xpThisLevel / XP_PER_LEVEL) * 100);
+
+        document.getElementById("s-xp").innerText = totalXp.toLocaleString();
+        document.getElementById("xp-total").innerText =
+          totalXp.toLocaleString();
+        document.getElementById("xp-days").innerText = level;
+        document.getElementById("xp-this-level").innerText = xpThisLevel;
+        document.getElementById("xp-level-title").innerText = `Level ${level}`;
+        document.getElementById("donut-pct").innerText = `LVL ${level}`;
+        document.getElementById("week-label").innerText =
+          `${xpThisLevel} / ${XP_PER_LEVEL} XP`;
+        document.getElementById("xp-bar-fill").style.width = pct + "%";
+        const circumference = 2 * Math.PI * 35;
+        const fill = document.getElementById("donutFill");
+        if (fill) fill.style.strokeDashoffset = circumference * (1 - pct / 100);
+      }
+
+      /* ── TOGGLE TASK ──────────────────────────── */
+      function togglePlannedTask(id, completed, event) {
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+
+        // Get task to check if it's today's task
+        fetch("/get-planned-tasks")
+          .then((res) => res.json())
+          .then((tasks) => {
+            const task = tasks.find((t) => t.id === id);
+            if (!task) return;
+
+            // Prevent completing tasks for other days
+            if (task.day !== todayIdx) {
+              console.warn("Can only complete today's tasks");
+              return;
+            }
+
+            const todayDate = new Date().toISOString().split("T")[0];
+            fetch(`/toggle-planned-task/${id}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                completed,
+                date_completed: completed ? todayDate : null,
+              }),
+            })
+              .then((res) => res.json())
+              .then(() => {
+                if (completed) {
+                  // COMPLETING TASK - add XP
+                  showXpPopup(event.clientX - 20, event.clientY - 20, 5);
+                  fetch("/add-xp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ xp: 5 }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      const prevLevel =
+                        Math.floor((data.total_xp - 5) / 50) + 1;
+                      const newLevel = Math.floor(data.total_xp / 50) + 1;
+                      updateXpUI(data.total_xp);
+                      if (newLevel > prevLevel)
+                        setTimeout(() => showLevelUpPopup(newLevel), 800);
+                    });
+                } else {
+                  // UNCHECKING TASK - deduct XP
+                  showXpPopup(event.clientX - 20, event.clientY - 20, -5);
+                  fetch("/add-xp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ xp: -5 }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      updateXpUI(data.total_xp);
+                    });
+                }
+                loadPlannedTasks();
+              })
+              .catch((err) => console.error(err));
+          })
+          .catch((err) => console.error(err));
+      }
+
+      /* ── RESET ALL TASKS ──────────────────────── */
+      function resetAllTasks() {
+        if (!confirm("Untick all tasks for the week?")) return;
+        fetch("/reset-week", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              alert("Error resetting tasks: " + data.error);
+            } else {
+              loadPlannedTasks();
+            }
+          })
+          .catch((err) => console.error(err));
+      }
+
+      /* ── DELETE PLANNED TASK ──────────────────── */
+      function deletePlannedTask(id, event) {
+        event.stopPropagation();
+        if (!confirm("Delete this task?")) return;
+        fetch(`/delete-planned-task/${id}`, { method: "DELETE" })
+          .then((res) => res.json())
+          .then(() => loadPlannedTasks())
+          .catch((err) => console.error(err));
+      }
+
+      /* ── LOAD USER STATS ─────────────────────── */
+      function loadUserStats() {
+        fetch("/get-user-stats")
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) return;
+            updateXpUI(data.total_xp || 0);
+          })
+          .catch((err) => console.error(err));
+      }
+
+      /* ── LOAD DASHBOARD FEED ─────────────────── */
+      function loadDashboard() {
+        fetch("/get-dashboard")
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data || data.length === 0) {
+              document.getElementById("feed").innerHTML = `
+                    <div class="empty-feed">
+                        <div class="icon">📊</div>
+                        <p>No activity yet.<br>Complete a habit to see it here!</p>
+                    </div>`;
+              return;
+            }
+            document.getElementById("feed").innerHTML = data
+              .map((item) => {
+                const style = typeColors[item.type] || typeColors.default;
+                const safeText = (item.text || "").replace(/'/g, "\\'");
+                return `
+                <div class="feed-item" draggable="true"
+                     ondragstart="handleDragStart(event, '${item.type}', '${safeText}', ${item.id})"
+                     ondragend="handleDragEnd(event)">
+                    <div class="feed-dot" style="background:${style.color}"></div>
+                    <div style="flex:1">
+                        <div class="feed-type" style="color:${style.color}">${item.type}</div>
+                        <div class="feed-text">${item.text}</div>
+                    </div>
+                    <button style="background:none;border:none;color:#cbd5e1;cursor:pointer;padding:4px;font-size:14px;opacity:0.6;transition:opacity 0.2s" onclick="deleteTask('${item.type}',${item.id})" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="Delete">🗑️</button>
+                </div>`;
+              })
+              .join("");
+          })
+          .catch(() => {
+            document.getElementById("feed").innerHTML = `
+                <div class="empty-feed">
+                    <div class="icon">📊</div>
+                    <p>Feed unavailable</p>
+                </div>`;
+          });
+      }
+
+      /* ── DELETE FEED TASK ────────────────────── */
+      function deleteTaskSilent(type, id) {
+        const typeMap = {
+          Workout: "delete-workout",
+          Cardio: "delete-cardio",
+          Nutrition: "delete-meal",
+          Hydration: "delete-water",
+          Hygiene: "delete-hygiene",
+        };
+        const endpoint = typeMap[type];
+        if (!endpoint) return;
+        fetch(`/${endpoint}/${id}`, { method: "DELETE" })
+          .then((res) => res.json())
+          .then(() => loadDashboard())
+          .catch((err) => console.error(err));
+      }
+
+      function deleteTask(type, id) {
+        if (!confirm("Delete this task?")) return;
+        const typeMap = {
+          Workout: "delete-workout",
+          Cardio: "delete-cardio",
+          Nutrition: "delete-meal",
+          Hydration: "delete-water",
+          Hygiene: "delete-hygiene",
+        };
+        const endpoint = typeMap[type];
+        if (!endpoint) return;
+        fetch(`/${endpoint}/${id}`, { method: "DELETE" })
+          .then((res) => res.json())
+          .then(() => loadDashboard())
+          .catch((err) => console.error(err));
+      }
+
+      /* ── DASHBOARD SYNCED FUNCTIONS ────────────────── */
+      /* GREETING */
+      function setGreeting() {
+        const h = new Date().getHours();
+        const g =
+          h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+        const greetingEl = document.getElementById("greeting");
+        if (greetingEl) greetingEl.innerText = g + "! Let's crush today.";
+        const moodDateEl = document.getElementById("mood-date");
+        if (moodDateEl) {
+          const dayNames = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ];
+          moodDateEl.innerText = dayNames[new Date().getDay()];
+        }
+      }
+
+      /* MOOD */
+      function selectMood(el, icon, label) {
+        document
+          .querySelectorAll(".mood-btn")
+          .forEach((b) => b.classList.remove("selected"));
+        el.classList.add("selected");
+        localStorage.setItem(
+          "habyx_mood_" + new Date().toDateString(),
+          icon + "|" + label,
+        );
+        const moodSavedEl = document.getElementById("moodSaved");
+        if (moodSavedEl) {
+          moodSavedEl.style.display = "block";
+          setTimeout(() => (moodSavedEl.style.display = "none"), 2000);
+        }
+      }
+
+      function loadMood() {
+        const saved = localStorage.getItem(
+          "habyx_mood_" + new Date().toDateString(),
+        );
+        if (!saved) return;
+        const [icon] = saved.split("|");
+        document.querySelectorAll(".mood-btn").forEach((b) => {
+          if (b.querySelector(".mood-icon").innerText === icon)
+            b.classList.add("selected");
+        });
+      }
+
+      /* XP CHART */
+      function buildXpChart(data) {
+        const xpChartEl = document.getElementById("xpChart");
+        if (!xpChartEl) return;
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+        const xpByDay = [0, 0, 0, 0, 0, 0, 0];
+        data.forEach((item, i) => {
+          xpByDay[i % 7] += 5;
+        });
+        const max = Math.max(...xpByDay, 10);
+        xpChartEl.innerHTML = DAYS.map((d, i) => {
+          const h = Math.max(4, Math.round((xpByDay[i] / max) * 100));
+          return `<div class="chart-bar-wrap">
+      <div class="chart-bar-val">${xpByDay[i] > 0 ? xpByDay[i] : ""}</div>
+      <div class="chart-bar ${i === todayIdx ? "today" : ""}" style="height:${h}px"></div>
+      <div class="chart-bar-day">${d}</div>
+    </div>`;
+        }).join("");
+      }
+
+      /* HEATMAP */
+      /* PERSONAL BESTS */
+      function loadPersonalBests(data) {
+        const waterItems = data.filter((d) => d.type === "Hydration");
+        const totalWater = waterItems.reduce((sum, d) => {
+          const m = d.text.match(/(\d+)\s*ml/);
+          return sum + (m ? parseInt(m[1]) : 0);
+        }, 0);
+        const mealItems = data.filter((d) => d.type === "Nutrition");
+        const totalCal = mealItems.reduce((sum, d) => {
+          const m = d.text.match(/(\d+)\s*kcal/);
+          return sum + (m ? parseInt(m[1]) : 0);
+        }, 0);
+        const pbWaterEl = document.getElementById("pb-water");
+        const pbCalEl = document.getElementById("pb-calories");
+        const pbWorkEl = document.getElementById("pb-workouts");
+        if (pbWaterEl) pbWaterEl.innerText = totalWater;
+        if (pbCalEl) pbCalEl.innerText = totalCal;
+        if (pbWorkEl)
+          pbWorkEl.innerText = data.filter((d) => d.type === "Workout").length;
+      }
+
+      /* WEEKLY GOALS */
+      function loadGoals(data) {
+        fetch("/get-today-hydration")
+          .then((r) => r.json())
+          .then((hydration) => {
+            const pct = hydration.percentage;
+            const gWPctEl = document.getElementById("goal-water-pct");
+            const gWBarEl = document.getElementById("goal-water-bar");
+            const gWSubEl = document.getElementById("goal-water-sub");
+
+            if (gWPctEl) gWPctEl.innerText = pct + "%";
+            if (gWBarEl) {
+              gWBarEl.style.width = Math.min(pct, 100) + "%";
+              // Add overflow class if over goal
+              if (pct > 100) {
+                gWBarEl.classList.add("overflow");
+              } else {
+                gWBarEl.classList.remove("overflow");
+              }
+            }
+            if (gWSubEl)
+              gWSubEl.innerText = `${hydration.total_ml} / ${hydration.daily_goal} ml`;
+          })
+          .catch(console.error);
+      }
+
+      /* WEEK CIRCLES */
+      function loadWeekCircles(tasks) {
+        const weekCirclesEl = document.getElementById("weekCircles");
+        if (!weekCirclesEl) return;
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+        const completedDays = new Set(
+          tasks.filter((t) => t.completed).map((t) => t.day),
+        );
+        weekCirclesEl.innerHTML = DAYS.map((d, i) => {
+          const done = completedDays.has(i);
+          const isToday = i === todayIdx;
+          return `<div class="week-day">
+      <div class="wday-name">${d}</div>
+      <div class="wday-circle ${done ? "done" : ""} ${isToday && !done ? "today" : ""}">${done ? "✓" : ""}</div>
+    </div>`;
+        }).join("");
+      }
+
+      /* TODAY TASKS */
+      function loadTodayTasks(tasks) {
+        const todayTasksEl = document.getElementById("todayTasks");
+        if (!todayTasksEl) return;
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+        const todayTasks = tasks.filter((t) => t.day === todayIdx);
+        if (todayTasks.length === 0) {
+          todayTasksEl.innerHTML =
+            '<div class="empty-s">No tasks for today<br>Go to Activity Hub to add some!</div>';
+          return;
+        }
+        todayTasksEl.innerHTML = todayTasks
+          .map((t) => {
+            const color = TYPE_COLORS[t.task_type] || "#94a3b8";
+            return `<div class="task-row">
+      <div class="task-chk ${t.completed ? "done" : ""}">${t.completed ? "✓" : ""}</div>
+      <div class="task-info">
+        <div class="task-type-s" style="color:${color}">${t.task_type}</div>
+        <div class="task-name-s">${t.task_name}</div>
+      </div>
+    </div>`;
+          })
+          .join("");
+      }
+
+      /* AI TIP */
+      function loadTip() {
+        const aiTipEl = document.getElementById("aiTip");
+        if (aiTipEl)
+          aiTipEl.innerText = TIPS[new Date().getDay() % TIPS.length];
+      }
+
+      /* LOAD ALL */
+      function loadAllDashboard() {
+        fetch("/get-user-stats")
+          .then((r) => r.json())
+          .then((d) => {
+            if (!d.error) {
+              const pbStreakEl = document.getElementById("pb-streak");
+              if (pbStreakEl) pbStreakEl.innerText = d.current_streak || 0;
+            }
+          })
+          .catch(console.error);
+
+        fetch("/get-dashboard")
+          .then((r) => r.json())
+          .then((data) => {
+            buildXpChart(data);
+            loadPersonalBests(data);
+            loadGoals(data);
+          })
+          .catch(console.error);
+
+        fetch("/get-planned-tasks")
+          .then((r) => r.json())
+          .then((tasks) => {
+            loadWeekCircles(tasks);
+          })
+          .catch(console.error);
+      }
+
+      /* ── CATEGORIES ──────────────────────────── */
+      const categories = [
+        { name: "Workout", icon: "🏋️", route: "workout" },
+        { name: "Cardio", icon: "🏃", route: "cardio" },
+        { name: "Hydration", icon: "💧", route: "hydration" },
+        { name: "Hygiene", icon: "🪥", route: "hygiene" },
+        { name: "Nutrition", icon: "🥗", route: "nutrition" },
+      ];
+
+      document.getElementById("catGrid").innerHTML = categories
+        .map(
+          (c) =>
+            `<a class="cat-card" href="/${c.route}">
+        <div class="cat-icon">${c.icon}</div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-xp">+XP</div>
+    </a>`,
+        )
+        .join("");
+
+      /* ── INIT ────────────────────────────────── */
+      renderWeekGrid();
+      loadDashboard();
+      loadUserStats();
+      loadAllDashboard();
+      setGreeting();
+      loadMood();
+      loadTip();
+      setInterval(loadDashboard, 3000);
+      setInterval(loadUserStats, 5000);
+      setInterval(loadAllDashboard, 10000);
+    </script>
+  </body>
+</html>

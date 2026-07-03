@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Achievements - Habyx</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #f0f4ff;
+        color: #1e293b;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* HEADER */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .header-left h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 4px;
+      }
+
+      .header-left p {
+        font-size: 14px;
+        color: #64748b;
+      }
+
+      .header-right {
+        display: flex;
+        gap: 12px;
+      }
+
+      .back-btn,
+      .logout-btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .back-btn:hover,
+      .logout-btn:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+
+      /* CATEGORIES */
+      .categories {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 28px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+      }
+
+      .category-btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .category-btn.active {
+        background: #7c3aed;
+        color: white;
+        border-color: #7c3aed;
+      }
+
+      .category-btn:hover:not(.active) {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+
+      /* ACHIEVEMENTS GRID */
+      .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .achievement-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .achievement-card.unlocked {
+        border-color: #fbbf24;
+        background: linear-gradient(135deg, #fef3c7, #fff7ed);
+      }
+
+      .achievement-card.locked {
+        opacity: 0.6;
+      }
+
+      .achievement-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .achievement-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        display: block;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .achievement-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 4px;
+      }
+
+      .achievement-desc {
+        font-size: 12px;
+        color: #64748b;
+        margin-bottom: 8px;
+        min-height: 32px;
+      }
+
+      .achievement-progress {
+        font-size: 13px;
+        font-weight: 500;
+        color: #7c3aed;
+        margin-bottom: 8px;
+      }
+
+      .achievement-tier {
+        display: inline-block;
+        background: #7c3aed;
+        color: white;
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .achievement-card.locked .achievement-tier {
+        background: #cbd5e1;
+      }
+
+      .check-mark {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: #10b981;
+        border-radius: 50%;
+        color: white;
+        font-size: 12px;
+        line-height: 20px;
+        margin-left: 4px;
+      }
+
+      /* STATS */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .stat-box {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #7c3aed;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      /* LOADING & EMPTY STATES */
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #64748b;
+      }
+
+      /* ACHIEVEMENT NOTIFICATION POPUP */
+      .achievement-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        border: 3px solid #fcd34d;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        animation: popupBounce 0.6s ease-out;
+        max-width: 90%;
+      }
+
+      @keyframes popupBounce {
+        0% {
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 0;
+        }
+        60% {
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+      }
+
+      .achievement-popup-icon {
+        font-size: 72px;
+        margin-bottom: 16px;
+        display: block;
+        animation: iconSpin 0.8s ease-out;
+      }
+
+      @keyframes iconSpin {
+        0% {
+          transform: scale(0) rotate(-45deg);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      .achievement-popup-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .achievement-popup-text {
+        font-size: 16px;
+        color: #fff;
+        margin-bottom: 8px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .achievement-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+      }
+
+      @media (max-width: 640px) {
+        .achievements-grid {
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        }
+
+        .header {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+
+        .header-right {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ACHIEVEMENT POPUP -->
+    <div
+      id="achievementPopupOverlay"
+      class="achievement-popup-overlay"
+      style="display: none"
+    ></div>
+    <div id="achievementPopup" class="achievement-popup" style="display: none">
+      <span id="popupIcon" class="achievement-popup-icon">🏆</span>
+      <div id="popupTitle" class="achievement-popup-title">
+        Achievement Unlocked!
+      </div>
+      <div id="popupText" class="achievement-popup-text">You did it!</div>
+    </div>
+
+    <div class="container">
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-left">
+          <h1>🏆 Achievements</h1>
+          <p id="greeting">Collect badges and unlock milestones</p>
+        </div>
+        <div class="header-right">
+          <button
+            class="back-btn"
+            onclick="window.location.href = '/dashboard'"
+          >
+            ← Back
+          </button>
+          <button class="logout-btn" onclick="window.location.href = '/logout'">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats">
+        <div class="stat-box">
+          <div class="stat-value" id="stat-unlocked">0</div>
+          <div class="stat-label">Unlocked</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="stat-completion">0%</div>
+          <div class="stat-label">Completion</div>
+        </div>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="categories">
+        <button class="category-btn active" onclick="filterAchievements('all')">
+          All
+        </button>
+        <button class="category-btn" onclick="filterAchievements('tasks')">
+          Tasks
+        </button>
+        <button class="category-btn" onclick="filterAchievements('xp')">
+          XP
+        </button>
+        <button class="category-btn" onclick="filterAchievements('hydration')">
+          Hydration
+        </button>
+        <button class="category-btn" onclick="filterAchievements('level')">
+          Levels
+        </button>
+      </div>
+
+      <!-- ACHIEVEMENTS GRID -->
+      <div class="achievements-grid" id="achievementsGrid">
+        <div class="loading">Loading achievements...</div>
+      </div>
+    </div>
+
+    <script>
+      const ACHIEVEMENTS = [
+        // TASK ACHIEVEMENTS
+        {
+          id: 1,
+          name: "First Steps",
+          icon: "👟",
+          description: "Complete your first task",
+          category: "tasks",
+          target: 1,
+          type: "tasks_completed",
+          tier: null,
+        },
+        {
+          id: 2,
+          name: "Task Master",
+          icon: "⚡",
+          description: "Complete 10 tasks",
+          category: "tasks",
+          target: 10,
+          type: "tasks_completed",
+          tier: "I",
+        },
+        {
+          id: 3,
+          name: "Task Master",
+          icon: "⚡",
+          description: "Complete 50 tasks",
+          category: "tasks",
+          target: 50,
+          type: "tasks_completed",
+          tier: "II",
+        },
+        {
+          id: 4,
+          name: "Task Master",
+          icon: "⚡",
+          description: "Complete 100 tasks",
+          category: "tasks",
+          target: 100,
+          type: "tasks_completed",
+          tier: "III",
+        },
+
+        // HYDRATION ACHIEVEMENTS
+        {
+          id: 5,
+          name: "Hydration Hero",
+          icon: "💧",
+          description: "Drink 2L water in one day",
+          category: "hydration",
+          target: 2000,
+          type: "daily_hydration",
+          tier: "I",
+        },
+        {
+          id: 6,
+          name: "Hydration Hero",
+          icon: "💧",
+          description: "Drink 5L water in one day",
+          category: "hydration",
+          target: 5000,
+          type: "daily_hydration",
+          tier: "II",
+        },
+        {
+          id: 7,
+          name: "Hydration Hero",
+          icon: "💧",
+          description: "Drink 10L water in one day",
+          category: "hydration",
+          target: 10000,
+          type: "daily_hydration",
+          tier: "III",
+        },
+
+        // LEVEL ACHIEVEMENTS
+        {
+          id: 8,
+          name: "Level Up!",
+          icon: "⬆️",
+          description: "Reach Level 2",
+          category: "level",
+          target: 2,
+          type: "level",
+          tier: "I",
+        },
+        {
+          id: 9,
+          name: "Level Up!",
+          icon: "⬆️",
+          description: "Reach Level 3",
+          category: "level",
+          target: 3,
+          type: "level",
+          tier: "II",
+        },
+        {
+          id: 10,
+          name: "Level Up!",
+          icon: "⬆️",
+          description: "Reach Level 5",
+          category: "level",
+          target: 5,
+          type: "level",
+          tier: "III",
+        },
+
+        // XP ACHIEVEMENTS
+        {
+          id: 11,
+          name: "XP Collector",
+          icon: "✨",
+          description: "Earn 100 total XP",
+          category: "xp",
+          target: 100,
+          type: "total_xp",
+          tier: "I",
+        },
+        {
+          id: 12,
+          name: "XP Collector",
+          icon: "✨",
+          description: "Earn 200 total XP",
+          category: "xp",
+          target: 200,
+          type: "total_xp",
+          tier: "II",
+        },
+        {
+          id: 13,
+          name: "XP Collector",
+          icon: "✨",
+          description: "Earn 500 total XP",
+          category: "xp",
+          target: 500,
+          type: "total_xp",
+          tier: "III",
+        },
+        {
+          id: 14,
+          name: "XP Collector",
+          icon: "✨",
+          description: "Earn 1000 total XP",
+          category: "xp",
+          target: 1000,
+          type: "total_xp",
+          tier: "IV",
+        },
+        {
+          id: 15,
+          name: "XP Collector",
+          icon: "✨",
+          description: "Earn 2000 total XP",
+          category: "xp",
+          target: 2000,
+          type: "total_xp",
+          tier: "V",
+        },
+
+        // WEEKLY ACHIEVEMENTS
+        {
+          id: 16,
+          name: "Week Warrior",
+          icon: "⚔️",
+          description: "Complete all tasks in a week",
+          category: "tasks",
+          target: 7,
+          type: "week_completion",
+          tier: null,
+        },
+
+        // LEGEND ACHIEVEMENT
+        {
+          id: 20,
+          name: "Legend Status",
+          icon: "👑",
+          description: "Reach Level 10",
+          category: "level",
+          target: 10,
+          type: "level",
+          tier: null,
+        },
+      ];
+
+      let currentFilter = "all";
+      let userStats = {};
+      let previousUnlockedIds = new Set(
+        JSON.parse(localStorage.getItem("unlockedAchievements") || "[]"),
+      );
+
+      async function loadAchievements() {
+        try {
+          const res = await fetch("/get-user-stats");
+          userStats = await res.json();
+
+          // Check for newly unlocked achievements
+          ACHIEVEMENTS.forEach((ach) => {
+            const unlocked = checkUnlocked(ach);
+            if (unlocked && !previousUnlockedIds.has(ach.id)) {
+              showAchievementPopup(ach);
+              previousUnlockedIds.add(ach.id);
+            }
+          });
+
+          // Save updated unlocked IDs
+          localStorage.setItem(
+            "unlockedAchievements",
+            JSON.stringify(Array.from(previousUnlockedIds)),
+          );
+
+          renderAchievements();
+          updateStats();
+        } catch (e) {
+          console.error(e);
+          document.getElementById("achievementsGrid").innerHTML =
+            "<div class='loading'>Error loading achievements</div>";
+        }
+      }
+
+      function showAchievementPopup(ach) {
+        const popup = document.getElementById("achievementPopup");
+        const overlay = document.getElementById("achievementPopupOverlay");
+        const icon = document.getElementById("popupIcon");
+        const title = document.getElementById("popupTitle");
+        const text = document.getElementById("popupText");
+
+        const tierText = ach.tier ? ` ${ach.tier}` : "";
+
+        icon.textContent = ach.icon;
+        title.textContent = `${ach.name}${tierText}`;
+        text.textContent = ach.description;
+
+        popup.style.display = "block";
+        overlay.style.display = "block";
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          popup.style.display = "none";
+          overlay.style.display = "none";
+        }, 3000);
+      }
+
+      function filterAchievements(category) {
+        currentFilter = category;
+        document
+          .querySelectorAll(".category-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+        renderAchievements();
+        updateStats();
+      }
+
+      function renderAchievements() {
+        const grid = document.getElementById("achievementsGrid");
+        grid.innerHTML = "";
+
+        const filtered =
+          currentFilter === "all"
+            ? ACHIEVEMENTS
+            : ACHIEVEMENTS.filter((a) => a.category === currentFilter);
+
+        filtered.forEach((ach) => {
+          const unlocked = checkUnlocked(ach);
+          const progress = getProgress(ach);
+
+          const card = document.createElement("div");
+          card.className = `achievement-card ${unlocked ? "unlocked" : "locked"}`;
+
+          const tierText = ach.tier ? ` ${ach.tier}` : "";
+
+          card.innerHTML = `
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}${tierText}</div>
+                    <div class="achievement-desc">${ach.description}</div>
+                    <div class="achievement-progress">${progress}</div>
+                    ${ach.tier ? `<span class="achievement-tier">${ach.tier}</span>` : ""}
+                    ${unlocked ? "<span class='check-mark'>✓</span>" : ""}
+                `;
+
+          grid.appendChild(card);
+        });
+      }
+
+      function checkUnlocked(ach) {
+        const stats = userStats;
+
+        switch (ach.type) {
+          case "tasks_completed":
+            return (stats.tasks_completed || 0) >= ach.target;
+          case "daily_hydration":
+            return (stats.today_hydration || 0) >= ach.target;
+          case "level":
+            const level = Math.floor((stats.total_xp || 0) / 50) + 1;
+            return level >= ach.target;
+          case "total_xp":
+            return (stats.total_xp || 0) >= ach.target;
+          case "week_completion":
+            return (stats.week_completed || 0) >= ach.target;
+          default:
+            return false;
+        }
+      }
+
+      function getProgress(ach) {
+        const stats = userStats;
+        let current = 0;
+
+        switch (ach.type) {
+          case "tasks_completed":
+            current = stats.tasks_completed || 0;
+            break;
+          case "daily_hydration":
+            current = stats.today_hydration || 0;
+            return `${current}/${ach.target}ml`;
+          case "level":
+            const level = Math.floor((stats.total_xp || 0) / 50) + 1;
+            return `Lvl ${level}/${ach.target}`;
+          case "total_xp":
+            current = stats.total_xp || 0;
+            break;
+          case "week_completion":
+            current = stats.week_completed || 0;
+            break;
+        }
+
+        return `${current}/${ach.target}`;
+      }
+
+      function updateStats() {
+        const filtered =
+          currentFilter === "all"
+            ? ACHIEVEMENTS
+            : ACHIEVEMENTS.filter((a) => a.category === currentFilter);
+
+        const unlockedCount = filtered.filter((a) => checkUnlocked(a)).length;
+        const total = filtered.length;
+        const completion =
+          total > 0 ? Math.round((unlockedCount / total) * 100) : 0;
+
+        document.getElementById("stat-unlocked").innerText = unlockedCount;
+        document.getElementById("stat-total").innerText = total;
+        document.getElementById("stat-completion").innerText = completion + "%";
+      }
+
+      // Refresh every 5 seconds
+      loadAchievements();
+      setInterval(loadAchievements, 5000);
+    </script>
+  </body>
+</html>

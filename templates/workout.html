@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Workout Builder</title>
+    <style>
+      body {
+        background: #f0f4ff;
+        color: #1e293b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f0f4ff;
+        color: #1e293b;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      /* TOP HEADER */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 28px;
+      }
+
+      .header-left h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      .header-left p {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-top: 2px;
+      }
+
+      .welcome-badge {
+        background: white;
+        border-radius: 50px;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      .welcome-badge span {
+        font-size: 13px;
+        color: #94a3b8;
+      }
+
+      .welcome-badge strong {
+        font-size: 14px;
+        color: #1e293b;
+        display: block;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-link-btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #3b82f6;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+
+      .header-link-btn:hover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+      }
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      /* STATS ROW */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 18px 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .stat-card .label {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-card .value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      .stat-card .unit {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-left: 4px;
+      }
+
+      .stat-accent {
+        height: 3px;
+        width: 32px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+
+      /* MAIN GRID */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      /* STICKMAN CARD */
+      .stickman-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+
+      .stickman-card h3 {
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+
+      svg {
+        width: 220px;
+        height: 340px;
+      }
+
+      .part {
+        fill: none;
+        stroke: #cbd5e1;
+        stroke-width: 6;
+        stroke-linecap: round;
+        cursor: pointer;
+        transition:
+          stroke 0.2s,
+          filter 0.2s;
+      }
+
+      .part:hover {
+        stroke: #3b82f6;
+        filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+      }
+
+      .part.active {
+        stroke: #3b82f6;
+        filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+      }
+
+      .body-labels {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+
+      .body-tag {
+        font-size: 11px;
+        padding: 4px 12px;
+        border-radius: 50px;
+        border: 1.5px solid #e2e8f0;
+        color: #64748b;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .body-tag:hover,
+      .body-tag.active {
+        border-color: #3b82f6;
+        background: #eff6ff;
+        color: #3b82f6;
+      }
+
+      /* WORKOUT PANEL */
+      .workout-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .workout-card {
+        background: white;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .workout-card h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 4px;
+      }
+
+      .workout-card .subtitle {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-bottom: 18px;
+      }
+
+      .exercise-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: #f8fafc;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        border: 1.5px solid #e2e8f0;
+        transition: border-color 0.2s;
+      }
+
+      .exercise-item:hover {
+        border-color: #bfdbfe;
+        background: #eff6ff;
+      }
+
+      .exercise-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .exercise-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+
+      .exercise-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .xp-badge {
+        font-size: 11px;
+        color: #3b82f6;
+        background: #eff6ff;
+        padding: 2px 8px;
+        border-radius: 20px;
+        margin-top: 2px;
+        display: inline-block;
+      }
+
+      .add-btn {
+        padding: 7px 14px;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .add-btn:hover {
+        background: #2563eb;
+      }
+
+      /* ROUTINE CARD */
+      .routine-card {
+        background: white;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .pb-tracker {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 16px;
+        margin: 16px 0 0;
+      }
+
+      .pb-tracker h3 {
+        margin: 0 0 12px;
+        font-size: 14px;
+        color: #334155;
+        letter-spacing: 0.2px;
+      }
+
+      .pb-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 10px;
+      }
+
+      .pb-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .pb-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .pb-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pb-controls button {
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 12px;
+        background: #f8fafc;
+        color: #334155;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .pb-controls button:hover {
+        background: #e2e8f6;
+      }
+
+      .pb-value {
+        min-width: 68px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .routine-tab {
+        flex: 1;
+        padding: 10px 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background: #f8fafc;
+        color: #1e293b;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+
+      .routine-tab.active {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+
+      .routine-count {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-bottom: 16px;
+      }
+
+      .routine-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        background: #f8fafc;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        border: 1.5px solid #e2e8f0;
+      }
+
+      .routine-item span {
+        font-size: 13px;
+        font-weight: 500;
+        color: #334155;
+      }
+
+      .remove-btn {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #fee2e2;
+        color: #ef4444;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        transition: background 0.2s;
+      }
+
+      .remove-btn:hover {
+        background: #fecaca;
+      }
+
+      .empty-routine {
+        text-align: center;
+        padding: 30px 0;
+        color: #cbd5e1;
+        font-size: 13px;
+      }
+
+      .empty-routine .icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+
+      /* SAVE BUTTON */
+      .save-btn {
+        margin-top: 16px;
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+        transition: opacity 0.2s;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+      }
+
+      .save-btn:hover {
+        opacity: 0.9;
+      }
+
+      .workout-save-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+
+      .workout-save-btn:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+      }
+
+      .toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        background: rgba(15, 23, 42, 0.95);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 14px;
+        box-shadow: 0 18px 60px rgba(15, 23, 42, 0.25);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(20px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+        z-index: 9999;
+      }
+
+      .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .toast-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+      }
+
+      .toast-message {
+        font-size: 14px;
+      }
+
+      /* AI COACH CARD */
+      .ai-card {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-radius: 20px;
+        padding: 22px;
+        color: white;
+        margin-top: 16px;
+      }
+
+      .ai-badge {
+        background: rgba(255, 255, 255, 0.2);
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+      }
+
+      .ai-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .ai-card p {
+        font-size: 12px;
+        opacity: 0.85;
+        line-height: 1.6;
+      }
+
+      /* PLACEHOLDER */
+      .placeholder {
+        text-align: center;
+        padding: 50px 20px;
+        color: #cbd5e1;
+      }
+
+      .placeholder .big-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .placeholder p {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <h1>💪 Workout Builder</h1>
+        <p>Click a body part to get started</p>
+      </div>
+      <div class="header-right">
+        <a href="/dashboard" class="header-link-btn">📊 Dashboard</a>
+        <a href="/activity" class="header-link-btn">🏠 Activity Hub</a>
+        <div class="welcome-badge">
+          <div><span>Welcome back</span><strong>{{ username }}</strong></div>
+          <div class="avatar">{{ initials }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="body-stats-section">
+      <div class="pb-tracker">
+        <h3>Personal Bests</h3>
+        <div class="pb-row">
+          <span class="pb-name">Bench Press</span>
+          <div class="pb-controls">
+            <button type="button" onclick="changePB('bench_press', -2.5)">
+              −
+            </button>
+            <span class="pb-value" id="pb-bench_press">0 kg</span>
+            <button type="button" onclick="changePB('bench_press', 2.5)">
+              +
+            </button>
+          </div>
+        </div>
+        <div class="pb-row">
+          <span class="pb-name">Squat</span>
+          <div class="pb-controls">
+            <button type="button" onclick="changePB('squat', -2.5)">−</button>
+            <span class="pb-value" id="pb-squat">0 kg</span>
+            <button type="button" onclick="changePB('squat', 2.5)">+</button>
+          </div>
+        </div>
+        <div class="pb-row">
+          <span class="pb-name">Deadlift</span>
+          <div class="pb-controls">
+            <button type="button" onclick="changePB('deadlift', -2.5)">
+              −
+            </button>
+            <span class="pb-value" id="pb-deadlift">0 kg</span>
+            <button type="button" onclick="changePB('deadlift', 2.5)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      <!-- STICKMAN -->
+      <div class="stickman-card">
+        <h3>Select Body Part</h3>
+
+        <svg viewBox="0 0 200 340">
+          <!-- Head -->
+          <circle
+            class="part"
+            id="p-head"
+            cx="100"
+            cy="45"
+            r="28"
+            onclick="show('head', 'p-head')"
+          />
+          <!-- Torso -->
+          <line
+            class="part"
+            id="p-torso"
+            x1="100"
+            y1="73"
+            x2="100"
+            y2="190"
+            onclick="show('torso', 'p-torso')"
+          />
+          <!-- Arms -->
+          <line
+            class="part"
+            id="p-arms1"
+            x1="100"
+            y1="110"
+            x2="38"
+            y2="155"
+            onclick="show('arms', 'p-arms1')"
+          />
+          <line
+            class="part"
+            id="p-arms2"
+            x1="100"
+            y1="110"
+            x2="162"
+            y2="155"
+            onclick="show('arms', 'p-arms2')"
+          />
+          <!-- Legs -->
+          <line
+            class="part"
+            id="p-legs1"
+            x1="100"
+            y1="190"
+            x2="55"
+            y2="310"
+            onclick="show('legs', 'p-legs1')"
+          />
+          <line
+            class="part"
+            id="p-legs2"
+            x1="100"
+            y1="190"
+            x2="145"
+            y2="310"
+            onclick="show('legs', 'p-legs2')"
+          />
+        </svg>
+
+        <div class="body-labels">
+          <div class="body-tag" id="tag-head" onclick="show('head', 'p-head')">
+            Head
+          </div>
+          <div class="body-tag" id="tag-arms" onclick="show('arms', 'p-arms1')">
+            Arms
+          </div>
+          <div
+            class="body-tag"
+            id="tag-torso"
+            onclick="show('torso', 'p-torso')"
+          >
+            Torso
+          </div>
+          <div class="body-tag" id="tag-legs" onclick="show('legs', 'p-legs1')">
+            Legs
+          </div>
+        </div>
+
+        <!-- AI Card inside stickman column -->
+        <div class="ai-card" style="margin-top: 20px; text-align: left">
+          <div class="ai-badge">✦ AI COACH</div>
+          <h3 id="ai-tip-title">Pick a body part!</h3>
+          <p id="ai-tip-body">
+            Tap any part of the stickman or use the labels above to see
+            exercises for that muscle group.
+          </p>
+        </div>
+      </div>
+
+      <!-- WORKOUT EXERCISES -->
+      <div class="workout-panel">
+        <div class="workout-card">
+          <h2 id="title">Choose a Body Part</h2>
+          <p class="subtitle" id="subtitle">Tap the stickman to begin</p>
+          <div id="workouts">
+            <div class="placeholder">
+              <div class="big-icon">🏋️</div>
+              <p>
+                Select a body part from the stickman to see available exercises
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let routine = [];
+      let currentPart = "";
+      let activeParts = [];
+
+      const workoutData = {
+        head: {
+          icon: "🧠",
+          tip: "Best next: Neck Rotation",
+          tipBody:
+            "Neck and breathing exercises help with posture and stress relief. Great way to start your session!",
+          exercises: [
+            { name: "Neck Stretches", xp: "+5 XP" },
+            { name: "Jaw Relaxation", xp: "+5 XP" },
+            { name: "Neck Rotation", xp: "+5 XP" },
+            { name: "Head Tilt Stretch", xp: "+5 XP" },
+            { name: "Breathing Focus", xp: "+5 XP" },
+          ],
+        },
+        arms: {
+          icon: "💪",
+          tip: "Best next: Bicep Curls",
+          tipBody:
+            "Your arms haven't been trained today. Starting with bicep curls gives maximum pump and XP gains!",
+          exercises: [
+            { name: "Bicep Curls", xp: "+5 XP" },
+            { name: "Tricep Dips", xp: "+5 XP" },
+            { name: "Push Ups", xp: "+5 XP" },
+            { name: "Arm Circles", xp: "+5 XP" },
+            { name: "Hammer Curls", xp: "+5 XP" },
+          ],
+        },
+        torso: {
+          icon: "🔥",
+          tip: "Best next: Plank",
+          tipBody:
+            "Core strength is the foundation of every workout. A strong torso improves all other exercises!",
+          exercises: [
+            { name: "Plank", xp: "+5 XP" },
+            { name: "Sit Ups", xp: "+5 XP" },
+            { name: "Crunches", xp: "+5 XP" },
+            { name: "Russian Twists", xp: "+5 XP" },
+            { name: "Mountain Climbers", xp: "+5 XP" },
+          ],
+        },
+        legs: {
+          icon: "🦵",
+          tip: "Best next: Squats",
+          tipBody:
+            "Legs are your biggest muscle group — training them burns the most calories and builds the most XP!",
+          exercises: [
+            { name: "Squats", xp: "+5 XP" },
+            { name: "Lunges", xp: "+5 XP" },
+            { name: "Calf Raises", xp: "+5 XP" },
+            { name: "Jump Squats", xp: "+5 XP" },
+            { name: "Wall Sit", xp: "+5 XP" },
+          ],
+        },
+      };
+
+      const partGroups = {
+        head: ["p-head"],
+        arms: ["p-arms1", "p-arms2"],
+        torso: ["p-torso"],
+        legs: ["p-legs1", "p-legs2"],
+      };
+
+      function clearActive() {
+        document
+          .querySelectorAll(".part")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".body-tag")
+          .forEach((el) => el.classList.remove("active"));
+      }
+
+      function show(part) {
+        currentPart = part;
+        clearActive();
+
+        partGroups[part].forEach((id) => {
+          document.getElementById(id)?.classList.add("active");
+        });
+        document.getElementById("tag-" + part)?.classList.add("active");
+
+        const data = workoutData[part];
+
+        document.getElementById("title").innerText =
+          part.charAt(0).toUpperCase() + part.slice(1) + " Workouts";
+        document.getElementById("subtitle").innerText =
+          data.exercises.length + " exercises available";
+
+        document.getElementById("ai-tip-title").innerText = data.tip;
+        document.getElementById("ai-tip-body").innerText = data.tipBody;
+
+        let html = "";
+        data.exercises.forEach((w, idx) => {
+          const safeName = w.name.replace(/'/g, "\\'");
+          html += `
+        <div class="exercise-item">
+            <div class="exercise-left">
+                <div class="exercise-icon">${data.icon}</div>
+                <div>
+                    <div class="exercise-name">${w.name}</div>
+                    <span class="xp-badge">${w.xp}</span>
+                </div>
+            </div>
+            <button type="button" class="workout-save-btn" onclick="saveWorkout('${safeName}')">Save</button>
+        </div>`;
+        });
+
+        const workoutsEl = document.getElementById("workouts");
+        workoutsEl.innerHTML = html;
+      }
+
+      function saveWorkout(workout) {
+        fetch("/save-workout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: workout,
+            body_part: currentPart || "mixed",
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            showToast("Workout saved successfully!");
+          })
+          .catch(() => {
+            showToast("Unable to save workout.", true);
+          });
+      }
+
+      function showToast(message, error = false) {
+        let toast = document.getElementById("workout-toast");
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.id = "workout-toast";
+          toast.className = "toast";
+          toast.innerHTML = `<div class="toast-icon">✓</div><div class="toast-message"></div>`;
+          document.body.appendChild(toast);
+        }
+        toast.querySelector(".toast-message").textContent = message;
+        toast.querySelector(".toast-icon").textContent = error ? "⚠️" : "✓";
+        toast.style.background = error
+          ? "rgba(220, 38, 38, 0.95)"
+          : "rgba(15, 23, 42, 0.95)";
+        toast.classList.add("show");
+
+        clearTimeout(window._workoutToastTimeout);
+        window._workoutToastTimeout = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2400);
+      }
+
+      function changePB(lift, delta) {
+        pbValues[lift] = Math.max(0, +(pbValues[lift] || 0) + delta);
+        if (pbValues[lift] < 0) pbValues[lift] = 0;
+        savePBs();
+        renderPBs();
+      }
+
+      function renderPBs() {
+        Object.entries(pbValues).forEach(([lift, value]) => {
+          const el = document.getElementById(`pb-${lift}`);
+          if (el) {
+            el.textContent = `${value.toFixed(value % 1 ? 1 : 0)} kg`;
+          }
+        });
+      }
+
+      function savePBs() {
+        localStorage.setItem("pbValues", JSON.stringify(pbValues));
+      }
+
+      function loadPBs() {
+        const stored = localStorage.getItem("pbValues");
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            pbValues = { ...pbValues, ...parsed };
+          } catch (err) {
+            pbValues = { ...defaultPBs };
+          }
+        }
+        renderPBs();
+      }
+
+      const defaultPBs = {
+        bench_press: 0,
+        squat: 0,
+        deadlift: 0,
+      };
+
+      let pbValues = { ...defaultPBs };
+
+      window.addEventListener("DOMContentLoaded", loadPBs);
+
+      function attachAddButtons(container) {
+        // no-op after removing My Routine feature
+      }
+
+      function add(workout) {
+        // no-op after removing My Routine feature
+      }
+
+      function remove(index) {
+        // no-op after removing My Routine feature
+      }
+
+      function renderRoutine() {
+        // no-op after removing My Routine feature
+      }
+
+      function saveRoutine() {
+        // no-op after removing My Routine feature
+      }
+
+      // Initialize Body Part Frequency Chart
+    </script>
+  </body>
+</html>

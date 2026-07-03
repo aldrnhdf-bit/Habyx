@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hygiene Routine Builder</title>
+<style>
+
+
+body { background: #f0f4ff; color: #1e293b; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4ff;
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+.header h1 { font-size: 26px; font-weight: 700; color: #1e293b; }
+.header p { font-size: 13px; color: #64748b; margin-top: 2px; }
+
+.welcome-badge {
+    background: white; border-radius: 50px;
+    padding: 8px 16px; display: flex; align-items: center;
+    gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.welcome-badge span {
+    font-size: 13px;
+    color: #94a3b8; }
+.welcome-badge strong { font-size: 14px; color: #1e293b; display: block; }
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.header-link-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b82f6;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+.header-link-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
+.avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 13px; font-weight: 700;
+}
+
+/* STATS */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: white; border-radius: 16px;
+    padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.stat-accent { height: 3px; width: 32px; border-radius: 4px; margin-bottom: 10px; }
+.stat-card .label { font-size: 12px; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.5px; }
+.stat-card .value { font-size: 26px; font-weight: 700; color: #1e293b; }
+.stat-card .unit { font-size: 13px; color: #94a3b8; margin-left: 3px; }
+
+/* AI CARD */
+.ai-card {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 20px; padding: 20px; color: white;
+    margin-bottom: 24px; display: flex; align-items: center; gap: 16px;
+}
+.ai-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+}
+.ai-badge {
+    font-size: 10px; font-weight: 700;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 10px; border-radius: 20px;
+    margin-bottom: 4px; display: inline-block; letter-spacing: 0.5px;
+}
+.ai-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.ai-card p { font-size: 12px; opacity: 0.85; line-height: 1.5; }
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+/* TIME COLUMN */
+.box {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.box-header h2 { font-size: 16px; font-weight: 700; color: #1e293b; }
+.count-badge {
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+}
+
+/* ADD INPUT */
+.add-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.add-row input {
+    flex: 1;
+    padding: 9px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 13px;
+    outline: none;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: border-color 0.2s;
+}
+.add-row input:focus { border-color: #3b82f6; background: white; }
+.add-row input::placeholder { color: #cbd5e1; }
+.add-row button {
+    padding: 9px 12px;
+    border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; color: white;
+    transition: opacity 0.2s;
+}
+.add-row button:hover { opacity: 0.85; }
+
+/* TASK */
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1.5px solid #e2e8f0;
+    transition: border-color 0.2s;
+}
+.task:hover { border-color: #bfdbfe; }
+.task-left { display: flex; align-items: center; gap: 10px; }
+.task-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.task span { font-size: 13px; font-weight: 500; color: #334155; }
+.remove-btn {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #fee2e2; color: #ef4444;
+    border: none; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; flex-shrink: 0;
+}
+.remove-btn:hover { background: #fecaca; }
+
+.empty-msg {
+    text-align: center; padding: 20px 0;
+    color: #cbd5e1; font-size: 13px;
+}
+.empty-msg .icon { font-size: 24px; margin-bottom: 6px; }
+
+/* TIME THEMES */
+.morning .add-row button { background: #f59e0b; }
+.morning .count-badge { background: #fef3c7; color: #d97706; }
+.morning .task-dot { background: #f59e0b; }
+
+.day .add-row button { background: #3b82f6; }
+.day .count-badge { background: #eff6ff; color: #3b82f6; }
+.day .task-dot { background: #3b82f6; }
+
+.evening .add-row button { background: #f97316; }
+.evening .count-badge { background: #fff7ed; color: #ea580c; }
+.evening .task-dot { background: #f97316; }
+
+.night .add-row button { background: #6366f1; }
+.night .count-badge { background: #ede9fe; color: #6366f1; }
+.night .task-dot { background: #6366f1; }
+
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(15, 23, 42, 0.95);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        z-index: 9999;
+    }
+    .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .toast-icon {
+        font-size: 18px;
+        line-height: 1;
+    }
+    .toast-message {
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div>
+        <h1>🧼 Hygiene Routine Builder</h1>
+        <p>Build consistent daily habits for every part of your day</p>
+    </div>
+    <div class="header-actions">
+        <a href="/dashboard" class="header-link-btn">📊 Dashboard</a>
+        <a href="/activity" class="header-link-btn">🏠 Activity Hub</a>
+        <div class="avatar">{{ initials }}</div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#f59e0b"></div>
+        <div class="label">MORNING TASKS</div>
+        <div class="value"><span id="s-morning">0</span><span class="unit">tasks</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#3b82f6"></div>
+        <div class="label">DAY TASKS</div>
+        <div class="value"><span id="s-day">0</span><span class="unit">tasks</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#f97316"></div>
+        <div class="label">EVENING TASKS</div>
+        <div class="value"><span id="s-evening">0</span><span class="unit">tasks</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-accent" style="background:#6366f1"></div>
+        <div class="label">NIGHT TASKS</div>
+        <div class="value"><span id="s-night">0</span><span class="unit">tasks</span></div>
+    </div>
+</div>
+
+<!-- AI COACH -->
+<div class="ai-card">
+    <div class="ai-icon">✦</div>
+    <div>
+        <div class="ai-badge">AI COACH</div>
+        <h3 id="ai-title">Start building your hygiene routine!</h3>
+        <p id="ai-body">Add tasks to each time slot — morning, day, evening, and night — to create a complete daily hygiene routine.</p>
+    </div>
+</div>
+
+<!-- COLUMNS -->
+<div class="grid">
+
+    <!-- MORNING -->
+    <div class="box morning">
+        <div class="box-header">
+            <h2>🌞 Morning</h2>
+            <div class="count-badge" id="badge-morning">0 tasks</div>
+        </div>
+        <div class="add-row">
+            <input id="morningInput" placeholder="Add task..."
+                onkeydown="if(event.key==='Enter') addTask('morning')">
+            <button onclick="addTask('morning')">+</button>
+        </div>
+        <div id="morningList">
+            <div class="empty-msg"><div class="icon">🌞</div><p>No tasks yet</p></div>
+        </div>
+    </div>
+
+    <!-- DAY -->
+    <div class="box day">
+        <div class="box-header">
+            <h2>🌤 Day</h2>
+            <div class="count-badge" id="badge-day">0 tasks</div>
+        </div>
+        <div class="add-row">
+            <input id="dayInput" placeholder="Add task..."
+                onkeydown="if(event.key==='Enter') addTask('day')">
+            <button onclick="addTask('day')">+</button>
+        </div>
+        <div id="dayList">
+            <div class="empty-msg"><div class="icon">🌤</div><p>No tasks yet</p></div>
+        </div>
+    </div>
+
+    <!-- EVENING -->
+    <div class="box evening">
+        <div class="box-header">
+            <h2>🌙 Evening</h2>
+            <div class="count-badge" id="badge-evening">0 tasks</div>
+        </div>
+        <div class="add-row">
+            <input id="eveningInput" placeholder="Add task..."
+                onkeydown="if(event.key==='Enter') addTask('evening')">
+            <button onclick="addTask('evening')">+</button>
+        </div>
+        <div id="eveningList">
+            <div class="empty-msg"><div class="icon">🌙</div><p>No tasks yet</p></div>
+        </div>
+    </div>
+
+    <!-- NIGHT -->
+    <div class="box night">
+        <div class="box-header">
+            <h2>🌚 Night</h2>
+            <div class="count-badge" id="badge-night">0 tasks</div>
+        </div>
+        <div class="add-row">
+            <input id="nightInput" placeholder="Add task..."
+                onkeydown="if(event.key==='Enter') addTask('night')">
+            <button onclick="addTask('night')">+</button>
+        </div>
+        <div id="nightList">
+            <div class="empty-msg"><div class="icon">🌚</div><p>No tasks yet</p></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const data = { morning: [], day: [], evening: [], night: [] };
+
+const icons = { morning: "🌞", day: "🌤", evening: "🌙", night: "🌚" };
+
+const aiTips = [
+    { title: "Great start!", body: "Keep adding tasks to each time slot to build a complete daily routine." },
+    { title: "You're building momentum! 💪", body: "A consistent hygiene routine takes about 21 days to stick. Keep going!" },
+    { title: "Looking good!", body: "Spreading tasks across morning, day, evening and night gives your day great structure." },
+    { title: "Routine champion! 🏆", body: "You've built a solid hygiene routine. Consistency is the key to long-term health habits." },
+];
+
+function addTask(type) {
+    const input = document.getElementById(type + "Input");
+    const value = input.value.trim();
+    if (!value) return;
+    data[type].push(value);
+    input.value = "";
+    
+    // Save to database
+    fetch("/save-hygiene", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            task: value,
+            time_of_day: type
+        })
+    })
+    .catch(err => {
+        console.error("Save error:", err);
+        showToast("Unable to save task.", true);
+    });
+    
+    render();
+    updateAI();
+    showToast("✅ Task added!");
+}
+
+function showToast(message, error = false) {
+    let toast = document.getElementById('page-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'page-toast';
+        toast.className = 'toast';
+        toast.innerHTML = `<div class="toast-icon">✓</div><div class="toast-message"></div>`;
+        document.body.appendChild(toast);
+    }
+    toast.querySelector('.toast-message').textContent = message;
+    toast.querySelector('.toast-icon').textContent = error ? '⚠️' : '✓';
+    toast.style.background = error ? 'rgba(220, 38, 38, 0.95)' : 'rgba(15, 23, 42, 0.95)';
+    toast.classList.add('show');
+    clearTimeout(window._pageToastTimeout);
+    window._pageToastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function removeTask(type, index) {
+    data[type].splice(index, 1);
+    render();
+    updateAI();
+}
+
+function render() {
+    for (let type in data) {
+        const count = data[type].length;
+
+        // Update stat + badge
+        document.getElementById("s-" + type).innerText = count;
+        document.getElementById("badge-" + type).innerText = count + " task" + (count !== 1 ? "s" : "");
+
+        if (count === 0) {
+            document.getElementById(type + "List").innerHTML =
+                `<div class="empty-msg"><div class="icon">${icons[type]}</div><p>No tasks yet</p></div>`;
+            continue;
+        }
+
+        document.getElementById(type + "List").innerHTML = data[type].map((task, i) => `
+            <div class="task">
+                <div class="task-left">
+                    <div class="task-dot"></div>
+                    <span>${task}</span>
+                </div>
+                <button class="remove-btn" onclick="removeTask('${type}',${i})">×</button>
+            </div>`).join("");
+    }
+}
+
+function updateAI() {
+    const total = Object.values(data).reduce((s, arr) => s + arr.length, 0);
+    const tip = aiTips[Math.min(Math.floor(total / 2), aiTips.length - 1)];
+    document.getElementById("ai-title").innerText = tip.title;
+    document.getElementById("ai-body").innerText = tip.body;
+}
+
+
+
+</script>
+</body>
+</html>
