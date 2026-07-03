@@ -1,551 +1,1497 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Habyx Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bangers&display=swap" rel="stylesheet">
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body { background: #f0f4ff; color: #1e293b; min-height: 100vh; padding: 24px; }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Habyx Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bangers&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        background: #f0f4ff;
+        color: #1e293b;
+        min-height: 100vh;
+        padding: 24px;
+      }
 
-/* HEADER */
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
-.header-left h1 { font-size: 26px; font-weight: 700; color: #1e293b; }
-.header-left p { font-size: 13px; color: #64748b; margin-top: 2px; }
-.header-right { display: flex; align-items: center; gap: 12px; }
-.logout-btn { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 7px 14px; font-size: 12px; font-weight: 600; color: #64748b; cursor: pointer; text-decoration: none; transition: all 0.2s; }
-.logout-btn:hover { border-color: #ef4444; color: #ef4444; }
-.welcome-badge { background: white; border-radius: 50px; padding: 8px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.welcome-badge span { font-size: 13px; color: #64748b; }
-.welcome-badge strong { font-size: 14px; color: #1e293b; display: block; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #6366f1); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; }
+      /* HEADER */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+      .header-left h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .header-left p {
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 2px;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logout-btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 7px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .logout-btn:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+      }
+      .welcome-badge {
+        background: white;
+        border-radius: 50px;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .welcome-badge span {
+        font-size: 13px;
+        color: #64748b;
+      }
+      .welcome-badge strong {
+        font-size: 14px;
+        color: #1e293b;
+        display: block;
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+      }
 
-/* NAV */
-.nav-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-.nav-tab { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 7px 16px; font-size: 12px; font-weight: 600; color: #64748b; cursor: pointer; text-decoration: none; transition: all 0.2s; }
-.nav-tab:hover { border-color: #93c5fd; color: #3b82f6; }
-.nav-tab.active { background: linear-gradient(135deg, #3b82f6, #6366f1); border-color: transparent; color: white; }
+      /* NAV */
+      .nav-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      .nav-tab {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 7px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .nav-tab:hover {
+        border-color: #93c5fd;
+        color: #3b82f6;
+      }
+      .nav-tab.active {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-color: transparent;
+        color: white;
+      }
 
-/* LEVEL BANNER */
-.level-card { background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 20px; padding: 24px 28px; color: white; margin-bottom: 20px; display: flex; align-items: center; gap: 24px; }
-.level-badge { width: 75px; height: 75px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-.level-badge .lvl-num { font-family: 'Bangers', cursive; font-size: 30px; line-height: 1; }
-.level-badge .lvl-txt { font-size: 9px; opacity: 0.8; letter-spacing: 1px; }
-.level-info { flex: 1; }
-.level-info h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.level-info p { font-size: 12px; opacity: 0.85; margin-bottom: 12px; }
-.xp-bar-label { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.8; margin-bottom: 5px; }
-.xp-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; }
-.xp-bar-fill { height: 100%; background: white; border-radius: 10px; transition: width 0.5s ease; width: 0%; }
-.level-xp-stats { display: flex; gap: 20px; flex-shrink: 0; }
-.lxp-stat { text-align: center; }
-.lxp-stat .val { font-size: 22px; font-weight: 700; }
-.lxp-stat .lbl { font-size: 10px; opacity: 0.75; }
+      /* LEVEL BANNER */
+      .level-card {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-radius: 20px;
+        padding: 24px 28px;
+        color: white;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .level-badge {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .level-badge .lvl-num {
+        font-family: "Bangers", cursive;
+        font-size: 30px;
+        line-height: 1;
+      }
+      .level-badge .lvl-txt {
+        font-size: 9px;
+        opacity: 0.8;
+        letter-spacing: 1px;
+      }
+      .level-info {
+        flex: 1;
+      }
+      .level-info h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .level-info p {
+        font-size: 12px;
+        opacity: 0.85;
+        margin-bottom: 12px;
+      }
+      .xp-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        opacity: 0.8;
+        margin-bottom: 5px;
+      }
+      .xp-bar {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .xp-bar-fill {
+        height: 100%;
+        background: white;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        width: 0%;
+      }
+      .level-xp-stats {
+        display: flex;
+        gap: 20px;
+        flex-shrink: 0;
+      }
+      .lxp-stat {
+        text-align: center;
+      }
+      .lxp-stat .val {
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .lxp-stat .lbl {
+        font-size: 10px;
+        opacity: 0.75;
+      }
 
-/* MOOD TRACKER */
-.mood-card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-.card-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-.card-title span { font-size: 12px; color: #94a3b8; font-weight: 400; }
-.mood-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.mood-btn { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 14px 20px; cursor: pointer; transition: all 0.2s; text-align: center; min-width: 80px; }
-.mood-btn:hover { border-color: #93c5fd; transform: translateY(-2px); }
-.mood-btn.selected { border-color: #3b82f6; background: #eff6ff; }
-.mood-btn .mood-icon { font-size: 28px; margin-bottom: 4px; }
-.mood-btn .mood-label { font-size: 11px; font-weight: 600; color: #64748b; }
-.mood-saved { font-size: 12px; color: #22c55e; text-align: center; margin-top: 12px; display: none; font-weight: 600; }
+      /* MOOD TRACKER */
+      .mood-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+      }
+      .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .card-title span {
+        font-size: 12px;
+        color: #94a3b8;
+        font-weight: 400;
+      }
+      .mood-options {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .mood-btn {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 14px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        min-width: 80px;
+      }
+      .mood-btn:hover {
+        border-color: #93c5fd;
+        transform: translateY(-2px);
+      }
+      .mood-btn.selected {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+      .mood-btn .mood-icon {
+        font-size: 28px;
+        margin-bottom: 4px;
+      }
+      .mood-btn .mood-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+      }
+      .mood-saved {
+        font-size: 12px;
+        color: #22c55e;
+        text-align: center;
+        margin-top: 12px;
+        display: none;
+        font-weight: 600;
+      }
 
-/* MAIN GRID */
-.main-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+      /* MAIN GRID */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 20px;
+        align-items: start;
+      }
 
-/* GENERIC CARD */
-.card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+      /* GENERIC CARD */
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+      }
 
-/* XP CHART */
-.chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-top: 8px; }
-.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
-.chart-bar { width: 100%; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, #6366f1, #3b82f6); min-height: 4px; transition: height 0.5s ease; position: relative; }
-.chart-bar.today { background: linear-gradient(180deg, #f59e0b, #f97316); }
-.chart-bar-val { font-size: 10px; font-weight: 700; color: #64748b; }
-.chart-bar-day { font-size: 10px; color: #94a3b8; font-weight: 600; }
+      /* XP CHART */
+      .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        height: 120px;
+        margin-top: 8px;
+      }
+      .chart-bar-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        height: 100%;
+        justify-content: flex-end;
+      }
+      .chart-bar {
+        width: 100%;
+        border-radius: 6px 6px 0 0;
+        background: linear-gradient(180deg, #6366f1, #3b82f6);
+        min-height: 4px;
+        transition: height 0.5s ease;
+        position: relative;
+      }
+      .chart-bar.today {
+        background: linear-gradient(180deg, #f59e0b, #f97316);
+      }
+      .chart-bar-val {
+        font-size: 10px;
+        font-weight: 700;
+        color: #64748b;
+      }
+      .chart-bar-day {
+        font-size: 10px;
+        color: #94a3b8;
+        font-weight: 600;
+      }
 
-/* HEATMAP */
-.heatmap { display: flex; gap: 3px; flex-wrap: wrap; }
-.heat-cell { width: 14px; height: 14px; border-radius: 3px; background: #e2e8f0; transition: all 0.2s; cursor: pointer; }
-.heat-cell.l1 { background: #bfdbfe; }
-.heat-cell.l2 { background: #60a5fa; }
-.heat-cell.l3 { background: #3b82f6; }
-.heat-cell.l4 { background: #1d4ed8; }
-.heat-month-labels { display: flex; gap: 3px; margin-bottom: 4px; }
-.heat-label { font-size: 9px; color: #94a3b8; width: 14px; text-align: center; }
-.heatmap-legend { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; color: #94a3b8; }
-.heatmap-legend .heat-cell { cursor: default; }
+      /* HEATMAP */
+      .heatmap {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+      }
+      .heat-cell {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        background: #e2e8f0;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .heat-cell.l1 {
+        background: #bfdbfe;
+      }
+      .heat-cell.l2 {
+        background: #60a5fa;
+      }
+      .heat-cell.l3 {
+        background: #3b82f6;
+      }
+      .heat-cell.l4 {
+        background: #1d4ed8;
+      }
+      .heat-month-labels {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 4px;
+      }
+      .heat-label {
+        font-size: 9px;
+        color: #94a3b8;
+        width: 14px;
+        text-align: center;
+      }
+      .heatmap-legend {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        font-size: 11px;
+        color: #94a3b8;
+      }
+      .heatmap-legend .heat-cell {
+        cursor: default;
+      }
 
-/* PERSONAL BESTS */
-.pb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.pb-item { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px 16px; }
-.pb-icon { font-size: 20px; margin-bottom: 6px; }
-.pb-label { font-size: 11px; color: #94a3b8; margin-bottom: 3px; }
-.pb-value { font-size: 18px; font-weight: 700; color: #1e293b; }
-.pb-unit { font-size: 11px; color: #94a3b8; margin-left: 3px; }
+      /* GOAL TRACKER */
+      .goal-item {
+        margin-bottom: 16px;
+      }
+      .goal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+      .goal-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+      .goal-pct {
+        font-size: 12px;
+        font-weight: 700;
+        color: #3b82f6;
+      }
+      .goal-bar {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: visible;
+        position: relative;
+      }
+      .goal-bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+      }
+      .goal-bar-fill.overflow::after {
+        content: "💧 GOAL CRUSHED!";
+        position: absolute;
+        left: 0;
+        bottom: -18px;
+        font-size: 11px;
+        white-space: nowrap;
+        color: #06b6d4;
+        font-weight: 700;
+      }
+      .goal-sub {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-top: 16px;
+      }
 
-/* GOAL TRACKER */
-.goal-item { margin-bottom: 16px; }
-.goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.goal-name { font-size: 13px; font-weight: 600; color: #1e293b; }
-.goal-pct { font-size: 12px; font-weight: 700; color: #3b82f6; }
-.goal-bar { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
-.goal-bar-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
-.goal-sub { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+      /* SIDEBAR CARDS */
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
 
-/* SIDEBAR CARDS */
-.sidebar { display: flex; flex-direction: column; gap: 16px; }
+      /* WEEK CIRCLES */
+      .week-circles {
+        display: flex;
+        gap: 6px;
+        justify-content: space-between;
+      }
+      .week-day {
+        flex: 1;
+        text-align: center;
+      }
+      .wday-name {
+        font-size: 10px;
+        color: #94a3b8;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .wday-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        border: 2px solid #e2e8f0;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        transition: all 0.2s;
+      }
+      .wday-circle.done {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-color: transparent;
+        color: white;
+      }
+      .wday-circle.today {
+        border-color: #3b82f6;
+      }
 
-/* WEEK CIRCLES */
-.week-circles { display: flex; gap: 6px; justify-content: space-between; }
-.week-day { flex: 1; text-align: center; }
-.wday-name { font-size: 10px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; }
-.wday-circle { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: 2px solid #e2e8f0; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.2s; }
-.wday-circle.done { background: linear-gradient(135deg, #3b82f6, #6366f1); border-color: transparent; color: white; }
-.wday-circle.today { border-color: #3b82f6; }
+      /* ACHIEVEMENTS */
+      .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .achievement-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        border: 2px solid #e2e8f0;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        position: relative;
+      }
+      .achievement-badge:hover {
+        transform: translateY(-4px);
+        border-color: #cbd5e1;
+      }
+      .achievement-badge.unlocked {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        border-color: #f59e0b;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      }
+      .achievement-badge.locked {
+        opacity: 0.5;
+      }
+      .achievement-icon {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+      .achievement-name {
+        font-size: 11px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 4px;
+      }
+      .achievement-badge.locked .achievement-name {
+        color: #94a3b8;
+      }
+      .achievement-progress {
+        font-size: 10px;
+        color: #64748b;
+      }
+      .achievement-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e293b;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 10px;
+        white-space: nowrap;
+        margin-bottom: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 10;
+      }
+      .achievement-badge:hover .achievement-tooltip {
+        opacity: 1;
+      }
 
-/* AI CARD */
-.ai-card { background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 20px; padding: 20px; color: white; }
-.ai-badge { font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 20px; margin-bottom: 8px; display: inline-block; }
-.ai-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-.ai-tip-box { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 12px; margin-top: 8px; font-size: 12px; line-height: 1.6; }
+      /* AI CARD */
+      .ai-card {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border-radius: 20px;
+        padding: 20px;
+        color: white;
+      }
+      .ai-badge {
+        font-size: 10px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 10px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+        display: inline-block;
+      }
+      .ai-card h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .ai-tip-box {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-top: 8px;
+        font-size: 12px;
+        line-height: 1.6;
+      }
 
-/* QUICK NAV */
-.quick-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; }
-.quick-btn { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 6px; text-align: center; text-decoration: none; color: #1e293b; transition: all 0.2s; display: block; }
-.quick-btn:hover { border-color: #93c5fd; background: #eff6ff; transform: translateY(-2px); }
-.quick-btn .q-icon { font-size: 20px; margin-bottom: 4px; }
-.quick-btn .q-name { font-size: 10px; font-weight: 600; color: #64748b; }
+      /* QUICK NAV */
+      .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+      .quick-btn {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 6px;
+        text-align: center;
+        text-decoration: none;
+        color: #1e293b;
+        transition: all 0.2s;
+        display: block;
+      }
+      .quick-btn:hover {
+        border-color: #93c5fd;
+        background: #eff6ff;
+        transform: translateY(-2px);
+      }
+      .quick-btn .q-icon {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      .quick-btn .q-name {
+        font-size: 10px;
+        font-weight: 600;
+        color: #64748b;
+      }
 
-/* TODAY TASKS */
-.task-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
-.task-row:last-child { border-bottom: none; }
-.task-chk { width: 16px; height: 16px; border-radius: 4px; border: 2px solid #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; }
-.task-chk.done { background: #22c55e; border-color: #22c55e; color: white; }
-.task-info { flex: 1; }
-.task-type-s { font-size: 11px; font-weight: 700; }
-.task-name-s { font-size: 10px; color: #94a3b8; }
-.empty-s { text-align: center; padding: 16px 0; color: #cbd5e1; font-size: 12px; }
-</style>
-</head>
-<body>
+      /* TODAY TASKS */
+      .task-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .task-row:last-child {
+        border-bottom: none;
+      }
+      .task-chk {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 2px solid #e2e8f0;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+      }
+      .task-chk.done {
+        background: #22c55e;
+        border-color: #22c55e;
+        color: white;
+      }
+      .task-info {
+        flex: 1;
+      }
+      .task-type-s {
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .task-name-s {
+        font-size: 10px;
+        color: #94a3b8;
+      }
+      .empty-s {
+        text-align: center;
+        padding: 16px 0;
+        color: #cbd5e1;
+        font-size: 12px;
+      }
 
-<!-- HEADER -->
-<div class="header">
-    <div class="header-left">
+      /* ACHIEVEMENT NOTIFICATION POPUP */
+      .achievement-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        border: 3px solid #fcd34d;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        animation: popupBounce 0.6s ease-out;
+        max-width: 90%;
+      }
+
+      @keyframes popupBounce {
+        0% {
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 0;
+        }
+        60% {
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+      }
+
+      .achievement-popup-icon {
+        font-size: 72px;
+        margin-bottom: 16px;
+        display: block;
+        animation: iconSpin 0.8s ease-out;
+      }
+
+      @keyframes iconSpin {
+        0% {
+          transform: scale(0) rotate(-45deg);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      .achievement-popup-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .achievement-popup-text {
+        font-size: 16px;
+        color: #fff;
+        margin-bottom: 8px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .achievement-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ACHIEVEMENT POPUP -->
+    <div
+      id="achievementPopupOverlay"
+      class="achievement-popup-overlay"
+      style="display: none"
+    ></div>
+    <div id="achievementPopup" class="achievement-popup" style="display: none">
+      <span id="popupIcon" class="achievement-popup-icon">🏆</span>
+      <div id="popupTitle" class="achievement-popup-title">
+        Achievement Unlocked!
+      </div>
+      <div id="popupText" class="achievement-popup-text">You did it!</div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
         <h1>Dashboard</h1>
         <p id="greeting">Good morning! Let's crush today.</p>
-    </div>
-    <div class="header-right">
+      </div>
+      <div class="header-right">
         <a href="/logout" class="logout-btn">🚪 Logout</a>
         <div class="welcome-badge">
-            <div><span>Welcome back</span><strong>{{ username }}</strong></div>
-            <div class="avatar">{{ initials }}</div>
+          <div><span>Welcome back</span><strong>{{ username }}</strong></div>
+          <div class="avatar">{{ initials }}</div>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- NAV -->
-<div class="nav-tabs">
-    <a href="/dashboard" class="nav-tab active">📊 Dashboard</a>
-    <a href="/activity" class="nav-tab">🏠 Activity Hub</a>
-    <a href="/workout" class="nav-tab">🏋️ Workout</a>
-    <a href="/cardio" class="nav-tab">🏃 Cardio</a>
-    <a href="/hydration" class="nav-tab">💧 Hydration</a>
-    <a href="/hygiene" class="nav-tab">🪥 Hygiene</a>
-    <a href="/nutrition" class="nav-tab">🥗 Nutrition</a>
-</div>
+    <!-- NAV -->
+    <div class="nav-tabs">
+      <a href="/dashboard" class="nav-tab active">📊 Dashboard</a>
+      <a href="/activity" class="nav-tab">🏠 Activity Hub</a>
+      <a href="/workout" class="nav-tab">🏋️ Workout</a>
+      <a href="/cardio" class="nav-tab">🏃 Cardio</a>
+      <a href="/hydration" class="nav-tab">💧 Hydration</a>
+      <a href="/hygiene" class="nav-tab">🪥 Hygiene</a>
+      <a href="/nutrition" class="nav-tab">🥗 Nutrition</a>
+    </div>
 
-<!-- LEVEL BANNER -->
-<div class="level-card">
-    <div class="level-badge">
+    <!-- LEVEL BANNER -->
+    <div class="level-card">
+      <div class="level-badge">
         <div class="lvl-num" id="lvl-num">1</div>
         <div class="lvl-txt">LEVEL</div>
-    </div>
-    <div class="level-info">
+      </div>
+      <div class="level-info">
         <h2 id="lvl-title">Level 1 — Beginner</h2>
         <p>Complete tasks in the Activity Hub to earn XP and level up!</p>
         <div class="xp-bar-label">
-            <span>Level Progress</span>
-            <span id="xp-label">0 / 50 XP</span>
+          <span>Level Progress</span>
+          <span id="xp-label">0 / 50 XP</span>
         </div>
-        <div class="xp-bar"><div class="xp-bar-fill" id="xp-bar-fill"></div></div>
-    </div>
-    <div class="level-xp-stats">
+        <div class="xp-bar">
+          <div class="xp-bar-fill" id="xp-bar-fill"></div>
+        </div>
+      </div>
+      <div class="level-xp-stats">
         <div class="lxp-stat">
-            <div class="val" id="lxp-this">0</div>
-            <div class="lbl">This Level XP</div>
+          <div class="val" id="lxp-this">0</div>
+          <div class="lbl">This Level XP</div>
         </div>
         <div class="lxp-stat">
-            <div class="val" id="lxp-total">0</div>
-            <div class="lbl">Total XP</div>
+          <div class="val" id="lxp-total">0</div>
+          <div class="lbl">Total XP</div>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- MOOD TRACKER -->
-<div class="mood-card">
-    <div class="card-title">
+    <!-- MOOD TRACKER -->
+    <div class="mood-card">
+      <div class="card-title">
         😊 How are you feeling today?
         <span id="mood-date"></span>
-    </div>
-    <div class="mood-options">
-        <div class="mood-btn" onclick="selectMood(this,'😴','Exhausted')">
-            <div class="mood-icon">😴</div>
-            <div class="mood-label">Exhausted</div>
+      </div>
+      <div class="mood-options">
+        <div class="mood-btn" onclick="selectMood(this, '😴', 'Exhausted')">
+          <div class="mood-icon">😴</div>
+          <div class="mood-label">Exhausted</div>
         </div>
-        <div class="mood-btn" onclick="selectMood(this,'😐','Meh')">
-            <div class="mood-icon">😐</div>
-            <div class="mood-label">Meh</div>
+        <div class="mood-btn" onclick="selectMood(this, '😐', 'Meh')">
+          <div class="mood-icon">😐</div>
+          <div class="mood-label">Meh</div>
         </div>
-        <div class="mood-btn" onclick="selectMood(this,'🙂','Good')">
-            <div class="mood-icon">🙂</div>
-            <div class="mood-label">Good</div>
+        <div class="mood-btn" onclick="selectMood(this, '🙂', 'Good')">
+          <div class="mood-icon">🙂</div>
+          <div class="mood-label">Good</div>
         </div>
-        <div class="mood-btn" onclick="selectMood(this,'💪','Motivated')">
-            <div class="mood-icon">💪</div>
-            <div class="mood-label">Motivated</div>
+        <div class="mood-btn" onclick="selectMood(this, '💪', 'Motivated')">
+          <div class="mood-icon">💪</div>
+          <div class="mood-label">Motivated</div>
         </div>
-        <div class="mood-btn" onclick="selectMood(this,'🔥','On Fire')">
-            <div class="mood-icon">🔥</div>
-            <div class="mood-label">On Fire!</div>
+        <div class="mood-btn" onclick="selectMood(this, '🔥', 'On Fire')">
+          <div class="mood-icon">🔥</div>
+          <div class="mood-label">On Fire!</div>
         </div>
-    </div>
-    <div class="mood-saved" id="moodSaved">✅ Mood saved!</div>
-</div>
-
-<!-- MAIN GRID -->
-<div class="main-grid">
-<div>
-
-    <!-- QUICK ACCESS -->
-    <div class="card">
-        <div class="card-title">⚡ Quick Access</div>
-        <div class="quick-grid">
-            <a href="/workout" class="quick-btn"><div class="q-icon">🏋️</div><div class="q-name">Workout</div></a>
-            <a href="/cardio" class="quick-btn"><div class="q-icon">🏃</div><div class="q-name">Cardio</div></a>
-            <a href="/hydration" class="quick-btn"><div class="q-icon">💧</div><div class="q-name">Hydration</div></a>
-            <a href="/hygiene" class="quick-btn"><div class="q-icon">🪥</div><div class="q-name">Hygiene</div></a>
-            <a href="/nutrition" class="quick-btn"><div class="q-icon">🥗</div><div class="q-name">Nutrition</div></a>
-        </div>
+      </div>
+      <div class="mood-saved" id="moodSaved">✅ Mood saved!</div>
     </div>
 
-    <!-- WEEKLY XP CHART -->
-    <div class="card">
-        <div class="card-title">📈 XP Earned This Week <span>+5 XP per task</span></div>
-        <div class="chart-bars" id="xpChart"></div>
-    </div>
-
-    <!-- HABIT HEATMAP -->
-    <div class="card">
-        <div class="card-title">🔥 Activity Heatmap <span>Last 12 weeks</span></div>
-        <div class="heatmap" id="heatmap"></div>
-        <div class="heatmap-legend">
-            Less
-            <div class="heat-cell"></div>
-            <div class="heat-cell l1"></div>
-            <div class="heat-cell l2"></div>
-            <div class="heat-cell l3"></div>
-            <div class="heat-cell l4"></div>
-            More
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      <div>
+        <!-- QUICK ACCESS -->
+        <div class="card">
+          <div class="card-title">⚡ Quick Access</div>
+          <div class="quick-grid">
+            <a href="/workout" class="quick-btn"
+              ><div class="q-icon">🏋️</div>
+              <div class="q-name">Workout</div></a
+            >
+            <a href="/cardio" class="quick-btn"
+              ><div class="q-icon">🏃</div>
+              <div class="q-name">Cardio</div></a
+            >
+            <a href="/hydration" class="quick-btn"
+              ><div class="q-icon">💧</div>
+              <div class="q-name">Hydration</div></a
+            >
+            <a href="/hygiene" class="quick-btn"
+              ><div class="q-icon">🪥</div>
+              <div class="q-name">Hygiene</div></a
+            >
+            <a href="/nutrition" class="quick-btn"
+              ><div class="q-icon">🥗</div>
+              <div class="q-name">Nutrition</div></a
+            >
+          </div>
         </div>
-    </div>
 
-    <!-- PERSONAL BESTS -->
-    <div class="card">
-        <div class="card-title">🏆 Personal Bests</div>
-        <div class="pb-grid">
-            <div class="pb-item">
-                <div class="pb-icon">💧</div>
-                <div class="pb-label">Most Water in a Day</div>
-                <div class="pb-value"><span id="pb-water">0</span><span class="pb-unit">ml</span></div>
-            </div>
-            <div class="pb-item">
-                <div class="pb-icon">🥗</div>
-                <div class="pb-label">Most Calories Tracked</div>
-                <div class="pb-value"><span id="pb-calories">0</span><span class="pb-unit">kcal</span></div>
-            </div>
-            <div class="pb-item">
-                <div class="pb-icon">🏋️</div>
-                <div class="pb-label">Workouts Logged</div>
-                <div class="pb-value"><span id="pb-workouts">0</span><span class="pb-unit">total</span></div>
-            </div>
-            <div class="pb-item">
-                <div class="pb-icon">⭐</div>
-                <div class="pb-label">Highest XP Earned</div>
-                <div class="pb-value"><span id="pb-xp">0</span><span class="pb-unit">xp</span></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- WEEKLY GOALS -->
-    <div class="card">
-        <div class="card-title">🎯 Weekly Goals</div>
-        <div class="goal-item">
+        <!-- WEEKLY GOALS -->
+        <div class="card">
+          <div class="card-title">💧 Daily Hydration Goal</div>
+          <div class="goal-item">
             <div class="goal-header">
-                <div class="goal-name">💧 Hydration — Log water daily</div>
-                <div class="goal-pct" id="goal-water-pct">0%</div>
+              <div class="goal-name">Water Intake Today</div>
+              <div class="goal-pct" id="goal-water-pct">0%</div>
             </div>
-            <div class="goal-bar"><div class="goal-bar-fill" id="goal-water-bar" style="background:linear-gradient(90deg,#06b6d4,#0284c7); width:0%"></div></div>
-            <div class="goal-sub" id="goal-water-sub">0 / 7 days logged</div>
-        </div>
-        <div class="goal-item">
-            <div class="goal-header">
-                <div class="goal-name">🏋️ Workout — Train this week</div>
-                <div class="goal-pct" id="goal-workout-pct">0%</div>
+            <div class="goal-bar">
+              <div
+                class="goal-bar-fill"
+                id="goal-water-bar"
+                style="
+                  background: linear-gradient(90deg, #06b6d4, #0284c7);
+                  width: 0%;
+                "
+              ></div>
             </div>
-            <div class="goal-bar"><div class="goal-bar-fill" id="goal-workout-bar" style="background:linear-gradient(90deg,#3b82f6,#6366f1); width:0%"></div></div>
-            <div class="goal-sub" id="goal-workout-sub">0 / 3 sessions</div>
+            <div class="goal-sub" id="goal-water-sub">0 / 2000 ml</div>
+          </div>
         </div>
-        <div class="goal-item">
-            <div class="goal-header">
-                <div class="goal-name">🥗 Nutrition — Track your meals</div>
-                <div class="goal-pct" id="goal-meal-pct">0%</div>
-            </div>
-            <div class="goal-bar"><div class="goal-bar-fill" id="goal-meal-bar" style="background:linear-gradient(90deg,#22c55e,#16a34a); width:0%"></div></div>
-            <div class="goal-sub" id="goal-meal-sub">0 / 7 days tracked</div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <!-- THIS WEEK -->
+        <div class="card">
+          <div class="card-title">📅 This Week</div>
+          <div class="week-circles" id="weekCircles"></div>
         </div>
-    </div>
 
-</div>
+        <!-- ACHIEVEMENTS -->
+        <div class="card">
+          <div
+            class="card-title"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <span>🏆 Achievements</span>
+            <a
+              href="/achievements"
+              style="
+                font-size: 12px;
+                color: #7c3aed;
+                text-decoration: none;
+                font-weight: 500;
+              "
+              >View All →</a
+            >
+          </div>
+          <div class="achievements-grid" id="achievementsGrid">
+            <!-- Loaded by JavaScript -->
+          </div>
+        </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-
-    <!-- THIS WEEK -->
-    <div class="card">
-        <div class="card-title">📅 This Week</div>
-        <div class="week-circles" id="weekCircles"></div>
-    </div>
-
-    <!-- TODAY'S TASKS -->
-    <div class="card">
-        <div class="card-title">
+        <!-- TODAY'S TASKS -->
+        <div class="card">
+          <div class="card-title">
             ✅ Today's Tasks
-            <a href="/activity" style="font-size:12px; color:#3b82f6; font-weight:600; text-decoration:none;">Manage →</a>
+            <a
+              href="/activity"
+              style="
+                font-size: 12px;
+                color: #3b82f6;
+                font-weight: 600;
+                text-decoration: none;
+              "
+              >Manage →</a
+            >
+          </div>
+          <div id="todayTasks">
+            <div class="empty-s">No tasks for today</div>
+          </div>
         </div>
-        <div id="todayTasks"><div class="empty-s">No tasks for today</div></div>
+
+        <!-- AI COACH -->
+        <div class="ai-card">
+          <div class="ai-badge">✦ AI COACH</div>
+          <h3>Daily Tip</h3>
+          <div class="ai-tip-box" id="aiTip">Loading tip...</div>
+        </div>
+      </div>
     </div>
 
-    <!-- AI COACH -->
-    <div class="ai-card">
-        <div class="ai-badge">✦ AI COACH</div>
-        <h3>Daily Tip</h3>
-        <div class="ai-tip-box" id="aiTip">Loading tip...</div>
-    </div>
+    <script>
+      const XP_PER_LEVEL = 50;
+      const LEVEL_TITLES = [
+        "Beginner",
+        "Rookie",
+        "Athlete",
+        "Champion",
+        "Legend",
+        "Master",
+        "Elite",
+        "Grandmaster",
+      ];
+      const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const TIPS = [
+        "💧 Drink a glass of water first thing in the morning to kickstart your metabolism.",
+        "🏋️ Consistency beats intensity — even a 10-minute workout counts!",
+        "🥗 Protein at every meal helps muscle recovery and keeps you full longer.",
+        "😴 Sleep is when your body repairs itself — aim for 7-8 hours tonight.",
+        "🏃 A 20-minute walk after meals improves digestion and blood sugar levels.",
+        "🪥 Your morning routine sets the tone for the whole day — keep it strong!",
+        "⭐ Every task earns XP — keep the momentum going!",
+      ];
+      const TYPE_COLORS = {
+        Workout: "#3b82f6",
+        Nutrition: "#22c55e",
+        Hygiene: "#f59e0b",
+        Hydration: "#06b6d4",
+        Cardio: "#6366f1",
+      };
 
-</div>
-</div>
+      /* ACHIEVEMENTS */
+      const ACHIEVEMENTS = [
+        // TASK ACHIEVEMENTS
+        {
+          id: 1,
+          name: "First Steps",
+          icon: "👟",
+          condition: "Complete your first task",
+          target: 1,
+          type: "tasks_completed",
+        },
+        {
+          id: 2,
+          name: "Task Master",
+          icon: "⚡",
+          condition: "Complete 10 tasks",
+          target: 10,
+          type: "tasks_completed",
+        },
+        {
+          id: 3,
+          name: "Task Master",
+          icon: "⚡",
+          condition: "Complete 50 tasks",
+          target: 50,
+          type: "tasks_completed",
+        },
+        {
+          id: 4,
+          name: "Task Master",
+          icon: "⚡",
+          condition: "Complete 100 tasks",
+          target: 100,
+          type: "tasks_completed",
+        },
 
-<script>
-const XP_PER_LEVEL = 50;
-const LEVEL_TITLES = ['Beginner','Rookie','Athlete','Champion','Legend','Master','Elite','Grandmaster'];
-const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const TIPS = [
-    '💧 Drink a glass of water first thing in the morning to kickstart your metabolism.',
-    '🏋️ Consistency beats intensity — even a 10-minute workout counts!',
-    '🥗 Protein at every meal helps muscle recovery and keeps you full longer.',
-    '😴 Sleep is when your body repairs itself — aim for 7-8 hours tonight.',
-    '🏃 A 20-minute walk after meals improves digestion and blood sugar levels.',
-    '🪥 Your morning routine sets the tone for the whole day — keep it strong!',
-    '⭐ Every task earns XP — keep the momentum going!'
-];
-const TYPE_COLORS = { Workout:'#3b82f6', Nutrition:'#22c55e', Hygiene:'#f59e0b', Hydration:'#06b6d4', Cardio:'#6366f1' };
+        // HYDRATION ACHIEVEMENTS
+        {
+          id: 5,
+          name: "Hydration Hero",
+          icon: "💧",
+          condition: "Drink 2L water in one day",
+          target: 2000,
+          type: "daily_hydration",
+        },
+        {
+          id: 6,
+          name: "Hydration Hero",
+          icon: "💧",
+          condition: "Drink 5L water in one day",
+          target: 5000,
+          type: "daily_hydration",
+        },
+        {
+          id: 7,
+          name: "Hydration Hero",
+          icon: "💧",
+          condition: "Drink 10L water in one day",
+          target: 10000,
+          type: "daily_hydration",
+        },
 
-/* GREETING */
-function setGreeting() {
-    const h = new Date().getHours();
-    const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-    document.getElementById('greeting').innerText = g + ', {{ username }}! Let\'s crush today.';
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    document.getElementById('mood-date').innerText = days[new Date().getDay()];
-}
+        // LEVEL ACHIEVEMENTS
+        {
+          id: 8,
+          name: "Level Up!",
+          icon: "⬆️",
+          condition: "Reach Level 2",
+          target: 2,
+          type: "level",
+        },
+        {
+          id: 9,
+          name: "Level Up!",
+          icon: "⬆️",
+          condition: "Reach Level 3",
+          target: 3,
+          type: "level",
+        },
+        {
+          id: 10,
+          name: "Level Up!",
+          icon: "⬆️",
+          condition: "Reach Level 5",
+          target: 5,
+          type: "level",
+        },
 
-/* MOOD */
-function selectMood(el, icon, label) {
-    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-    localStorage.setItem('habyx_mood_' + new Date().toDateString(), icon + '|' + label);
-    document.getElementById('moodSaved').style.display = 'block';
-    setTimeout(() => document.getElementById('moodSaved').style.display = 'none', 2000);
-}
-function loadMood() {
-    const saved = localStorage.getItem('habyx_mood_' + new Date().toDateString());
-    if (!saved) return;
-    const [icon] = saved.split('|');
-    document.querySelectorAll('.mood-btn').forEach(b => {
-        if (b.querySelector('.mood-icon').innerText === icon) b.classList.add('selected');
-    });
-}
+        // XP ACHIEVEMENTS
+        {
+          id: 11,
+          name: "XP Collector",
+          icon: "✨",
+          condition: "Earn 100 total XP",
+          target: 100,
+          type: "total_xp",
+        },
+        {
+          id: 12,
+          name: "XP Collector",
+          icon: "✨",
+          condition: "Earn 200 total XP",
+          target: 200,
+          type: "total_xp",
+        },
+        {
+          id: 13,
+          name: "XP Collector",
+          icon: "✨",
+          condition: "Earn 500 total XP",
+          target: 500,
+          type: "total_xp",
+        },
+        {
+          id: 14,
+          name: "XP Collector",
+          icon: "✨",
+          condition: "Earn 1000 total XP",
+          target: 1000,
+          type: "total_xp",
+        },
+        {
+          id: 15,
+          name: "XP Collector",
+          icon: "✨",
+          condition: "Earn 2000 total XP",
+          target: 2000,
+          type: "total_xp",
+        },
 
-/* XP UI */
-function updateXpUI(totalXp) {
-    const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
-    const xpThis = totalXp % XP_PER_LEVEL;
-    const pct = Math.round((xpThis / XP_PER_LEVEL) * 100);
-    const title = LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)];
-    document.getElementById('lvl-num').innerText = level;
-    document.getElementById('lvl-title').innerText = `Level ${level} — ${title}`;
-    document.getElementById('xp-label').innerText = `${xpThis} / ${XP_PER_LEVEL} XP`;
-    document.getElementById('xp-bar-fill').style.width = pct + '%';
-    document.getElementById('lxp-this').innerText = xpThis;
-    document.getElementById('lxp-total').innerText = totalXp.toLocaleString();
-}
+        // WEEKLY ACHIEVEMENTS
+        {
+          id: 16,
+          name: "Week Warrior",
+          icon: "⚔️",
+          condition: "Complete all tasks in a week",
+          target: 7,
+          type: "week_completion",
+        },
 
-/* XP CHART */
-function buildXpChart(data) {
-    const today = new Date().getDay();
-    const todayIdx = today === 0 ? 6 : today - 1;
-    const xpByDay = [0,0,0,0,0,0,0];
+        // DAILY ACHIEVEMENTS
+        {
+          id: 17,
+          name: "Daily Driver",
+          icon: "🚀",
+          condition: "Complete tasks 3 days in a row",
+          target: 3,
+          type: "daily_activity",
+        },
+        {
+          id: 18,
+          name: "Daily Driver",
+          icon: "🚀",
+          condition: "Complete tasks 7 days in a row",
+          target: 7,
+          type: "daily_activity",
+        },
+        {
+          id: 19,
+          name: "Daily Driver",
+          icon: "🚀",
+          condition: "Complete tasks 14 days in a row",
+          target: 14,
+          type: "daily_activity",
+        },
 
-    // Simulate XP from completed tasks this week
-    data.forEach((item, i) => { xpByDay[i % 7] += 5; });
+        // LEGEND ACHIEVEMENT
+        {
+          id: 20,
+          name: "Legend Status",
+          icon: "👑",
+          condition: "Reach Level 10",
+          target: 10,
+          type: "level",
+        },
+      ];
 
-    const max = Math.max(...xpByDay, 10);
-    document.getElementById('xpChart').innerHTML = DAYS.map((d, i) => {
-        const h = Math.max(4, Math.round((xpByDay[i] / max) * 100));
-        return `<div class="chart-bar-wrap">
-            <div class="chart-bar-val">${xpByDay[i] > 0 ? xpByDay[i] : ''}</div>
-            <div class="chart-bar ${i === todayIdx ? 'today' : ''}" style="height:${h}px"></div>
+      // Track previously unlocked achievements
+      if (!window.previousUnlockedIds) {
+        window.previousUnlockedIds = new Set(
+          JSON.parse(localStorage.getItem("unlockedAchievements") || "[]"),
+        );
+      }
+
+      function loadAchievements(stats) {
+        const grid = document.getElementById("achievementsGrid");
+        grid.innerHTML = "";
+
+        let unlockedCount = 0;
+        const today_ml = stats.today_hydration || 0;
+
+        ACHIEVEMENTS.forEach((ach) => {
+          let unlocked = false;
+          let progress = "Locked";
+
+          if (ach.type === "tasks_completed") {
+            unlocked = stats.tasks_completed >= ach.target;
+            progress = `${Math.min(stats.tasks_completed || 0, ach.target)}/${ach.target}`;
+          } else if (ach.type === "daily_hydration") {
+            unlocked = today_ml >= ach.target;
+            progress = `${today_ml}/${ach.target}ml`;
+          } else if (ach.type === "level") {
+            const currentLevel = Math.floor(stats.total_xp / 50) + 1;
+            unlocked = currentLevel >= ach.target;
+            progress = `Lvl ${currentLevel}`;
+          } else if (ach.type === "total_xp") {
+            unlocked = (stats.total_xp || 0) >= ach.target;
+            progress = `${stats.total_xp || 0}/${ach.target}`;
+          } else if (ach.type === "week_completion") {
+            unlocked = stats.week_completed >= ach.target;
+            progress = `${stats.week_completed || 0}/${ach.target}`;
+          }
+
+          // Check if this is a newly unlocked achievement
+          if (unlocked && !window.previousUnlockedIds.has(ach.id)) {
+            showAchievementPopup(ach);
+            window.previousUnlockedIds.add(ach.id);
+            localStorage.setItem(
+              "unlockedAchievements",
+              JSON.stringify(Array.from(window.previousUnlockedIds)),
+            );
+          }
+
+          if (unlocked) unlockedCount++;
+
+          const badge = document.createElement("div");
+          badge.className = `achievement-badge ${unlocked ? "unlocked" : "locked"}`;
+          badge.innerHTML = `
+            <div class="achievement-icon">${ach.icon}</div>
+            <div class="achievement-name">${ach.name}</div>
+            <div class="achievement-progress">${unlocked ? "✓" : progress}</div>
+            <div class="achievement-tooltip">${ach.condition}</div>
+          `;
+          grid.appendChild(badge);
+        });
+      }
+
+      function showAchievementPopup(ach) {
+        const popup = document.getElementById("achievementPopup");
+        const overlay = document.getElementById("achievementPopupOverlay");
+        const icon = document.getElementById("popupIcon");
+        const title = document.getElementById("popupTitle");
+        const text = document.getElementById("popupText");
+
+        icon.textContent = ach.icon;
+        title.textContent = ach.name;
+        text.textContent = ach.condition;
+
+        popup.style.display = "block";
+        overlay.style.display = "block";
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          popup.style.display = "none";
+          overlay.style.display = "none";
+        }, 3000);
+      }
+
+      /* GREETING */
+      function setGreeting() {
+        const h = new Date().getHours();
+        const g =
+          h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+        document.getElementById("greeting").innerText =
+          g + ", {{ username }}! Let's crush today.";
+        const days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        document.getElementById("mood-date").innerText =
+          days[new Date().getDay()];
+      }
+
+      /* MOOD */
+      function selectMood(el, icon, label) {
+        document
+          .querySelectorAll(".mood-btn")
+          .forEach((b) => b.classList.remove("selected"));
+        el.classList.add("selected");
+        localStorage.setItem(
+          "habyx_mood_" + new Date().toDateString(),
+          icon + "|" + label,
+        );
+        document.getElementById("moodSaved").style.display = "block";
+        setTimeout(
+          () => (document.getElementById("moodSaved").style.display = "none"),
+          2000,
+        );
+      }
+      function loadMood() {
+        const saved = localStorage.getItem(
+          "habyx_mood_" + new Date().toDateString(),
+        );
+        if (!saved) return;
+        const [icon] = saved.split("|");
+        document.querySelectorAll(".mood-btn").forEach((b) => {
+          if (b.querySelector(".mood-icon").innerText === icon)
+            b.classList.add("selected");
+        });
+      }
+
+      /* XP UI */
+      function updateXpUI(totalXp) {
+        const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
+        const xpThis = totalXp % XP_PER_LEVEL;
+        const pct = Math.round((xpThis / XP_PER_LEVEL) * 100);
+        const title =
+          LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)];
+        document.getElementById("lvl-num").innerText = level;
+        document.getElementById("lvl-title").innerText =
+          `Level ${level} — ${title}`;
+        document.getElementById("xp-label").innerText =
+          `${xpThis} / ${XP_PER_LEVEL} XP`;
+        document.getElementById("xp-bar-fill").style.width = pct + "%";
+        document.getElementById("lxp-this").innerText = xpThis;
+        document.getElementById("lxp-total").innerText =
+          totalXp.toLocaleString();
+      }
+
+      /* XP CHART */
+      function buildXpChart(data) {
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+        const xpByDay = [0, 0, 0, 0, 0, 0, 0];
+
+        // Simulate XP from completed tasks this week
+        data.forEach((item, i) => {
+          xpByDay[i % 7] += 5;
+        });
+
+        const max = Math.max(...xpByDay, 10);
+        document.getElementById("xpChart").innerHTML = DAYS.map((d, i) => {
+          const h = Math.max(4, Math.round((xpByDay[i] / max) * 100));
+          return `<div class="chart-bar-wrap">
+            <div class="chart-bar-val">${xpByDay[i] > 0 ? xpByDay[i] : ""}</div>
+            <div class="chart-bar ${i === todayIdx ? "today" : ""}" style="height:${h}px"></div>
             <div class="chart-bar-day">${d}</div>
         </div>`;
-    }).join('');
-}
+        }).join("");
+      }
 
-/* HEATMAP */
-function buildHeatmap() {
-    const cells = 84; // 12 weeks x 7 days
-    const heatmap = document.getElementById('heatmap');
-    heatmap.innerHTML = '';
-    for (let i = 0; i < cells; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'heat-cell';
-        // Random data for now — in future connect to real activity log
-        const rand = Math.random();
-        if (rand > 0.85) cell.classList.add('l4');
-        else if (rand > 0.7) cell.classList.add('l3');
-        else if (rand > 0.55) cell.classList.add('l2');
-        else if (rand > 0.4) cell.classList.add('l1');
-        heatmap.appendChild(cell);
-    }
-}
+      /* PERSONAL BESTS */
 
-/* PERSONAL BESTS */
-function loadPersonalBests(data) {
-    const waterItems = data.filter(d => d.type === 'Hydration');
-    const totalWater = waterItems.reduce((sum, d) => {
-        const m = d.text.match(/(\d+)\s*ml/);
-        return sum + (m ? parseInt(m[1]) : 0);
-    }, 0);
-    const mealItems = data.filter(d => d.type === 'Nutrition');
-    const totalCal = mealItems.reduce((sum, d) => {
-        const m = d.text.match(/(\d+)\s*kcal/);
-        return sum + (m ? parseInt(m[1]) : 0);
-    }, 0);
-    document.getElementById('pb-water').innerText = totalWater;
-    document.getElementById('pb-calories').innerText = totalCal;
-    document.getElementById('pb-workouts').innerText = data.filter(d => d.type === 'Workout').length;
-}
+      /* WEEKLY GOALS */
+      function loadGoals(data) {
+        fetch("/get-today-hydration")
+          .then((r) => r.json())
+          .then((hydration) => {
+            const pct = hydration.percentage;
+            const bar = document.getElementById("goal-water-bar");
 
-/* WEEKLY GOALS */
-function loadGoals(data) {
-    const waterDays = new Set(data.filter(d => d.type === 'Hydration').map((_, i) => i % 7)).size;
-    const workouts = data.filter(d => d.type === 'Workout').length;
-    const mealDays = new Set(data.filter(d => d.type === 'Nutrition').map((_, i) => i % 7)).size;
+            // Set bar width (cap at 100% for display, but allow overflow)
+            bar.style.width = Math.min(pct, 100) + "%";
 
-    const wPct = Math.min(100, Math.round((waterDays / 7) * 100));
-    const woPct = Math.min(100, Math.round((workouts / 3) * 100));
-    const mPct = Math.min(100, Math.round((mealDays / 7) * 100));
+            // Add overflow class if over goal
+            if (pct > 100) {
+              bar.classList.add("overflow");
+            } else {
+              bar.classList.remove("overflow");
+            }
 
-    document.getElementById('goal-water-pct').innerText = wPct + '%';
-    document.getElementById('goal-water-bar').style.width = wPct + '%';
-    document.getElementById('goal-water-sub').innerText = `${waterDays} / 7 days logged`;
+            document.getElementById("goal-water-pct").innerText = pct + "%";
+            document.getElementById("goal-water-sub").innerText =
+              `${hydration.total_ml} / ${hydration.daily_goal} ml`;
+          })
+          .catch(console.error);
+      }
 
-    document.getElementById('goal-workout-pct').innerText = woPct + '%';
-    document.getElementById('goal-workout-bar').style.width = woPct + '%';
-    document.getElementById('goal-workout-sub').innerText = `${workouts} / 3 sessions`;
+      /* WEEK CIRCLES */
+      function loadWeekCircles(tasks) {
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
 
-    document.getElementById('goal-meal-pct').innerText = mPct + '%';
-    document.getElementById('goal-meal-bar').style.width = mPct + '%';
-    document.getElementById('goal-meal-sub').innerText = `${mealDays} / 7 days tracked`;
-}
+        // Group tasks by day and check if all tasks for each day are completed
+        const dayTasks = {};
+        for (let i = 0; i < 7; i++) {
+          dayTasks[i] = tasks.filter((t) => t.day === i);
+        }
 
-/* WEEK CIRCLES */
-function loadWeekCircles(tasks) {
-    const today = new Date().getDay();
-    const todayIdx = today === 0 ? 6 : today - 1;
-    const completedDays = new Set(tasks.filter(t => t.completed).map(t => t.day));
-    document.getElementById('weekCircles').innerHTML = DAYS.map((d, i) => {
-        const done = completedDays.has(i);
-        const isToday = i === todayIdx;
-        return `<div class="week-day">
+        const completedDays = new Set();
+        for (let i = 0; i < 7; i++) {
+          const tasksForDay = dayTasks[i];
+          // Only mark day as complete if there are tasks AND all are completed
+          if (tasksForDay.length > 0 && tasksForDay.every((t) => t.completed)) {
+            completedDays.add(i);
+          }
+        }
+
+        document.getElementById("weekCircles").innerHTML = DAYS.map((d, i) => {
+          const done = completedDays.has(i);
+          const isToday = i === todayIdx;
+          return `<div class="week-day">
             <div class="wday-name">${d}</div>
-            <div class="wday-circle ${done ? 'done' : ''} ${isToday && !done ? 'today' : ''}">${done ? '✓' : ''}</div>
+            <div class="wday-circle ${done ? "done" : ""} ${isToday && !done ? "today" : ""}">${done ? "✓" : ""}</div>
         </div>`;
-    }).join('');
-}
+        }).join("");
+      }
 
-/* TODAY TASKS */
-function loadTodayTasks(tasks) {
-    const today = new Date().getDay();
-    const todayIdx = today === 0 ? 6 : today - 1;
-    const todayTasks = tasks.filter(t => t.day === todayIdx);
-    if (todayTasks.length === 0) {
-        document.getElementById('todayTasks').innerHTML = '<div class="empty-s">No tasks for today<br>Go to Activity Hub to add some!</div>';
-        return;
-    }
-    document.getElementById('todayTasks').innerHTML = todayTasks.map(t => {
-        const color = TYPE_COLORS[t.task_type] || '#94a3b8';
-        return `<div class="task-row">
-            <div class="task-chk ${t.completed ? 'done' : ''}">${t.completed ? '✓' : ''}</div>
+      /* TODAY TASKS */
+      function toggleTodayTask(id, currentStatus) {
+        const newStatus = !currentStatus;
+        const today = new Date().toISOString().split("T")[0];
+
+        fetch(`/toggle-planned-task/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            completed: newStatus,
+            date_completed: newStatus ? today : null,
+          }),
+        })
+          .then((res) => res.json())
+          .then(() => {
+            if (newStatus) {
+              // COMPLETING TASK - add XP
+              fetch("/add-xp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ xp: 5 }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  loadAll();
+                })
+                .catch(console.error);
+            } else {
+              // UNCHECKING TASK - deduct XP
+              fetch("/add-xp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ xp: -5 }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  loadAll();
+                })
+                .catch(console.error);
+            }
+          })
+          .catch(console.error);
+      }
+
+      function loadTodayTasks(tasks) {
+        const today = new Date().getDay();
+        const todayIdx = today === 0 ? 6 : today - 1;
+        const todayTasks = tasks.filter((t) => t.day === todayIdx);
+        if (todayTasks.length === 0) {
+          document.getElementById("todayTasks").innerHTML =
+            '<div class="empty-s">No tasks for today<br>Go to Activity Hub to add some!</div>';
+          return;
+        }
+        document.getElementById("todayTasks").innerHTML = todayTasks
+          .map((t) => {
+            const color = TYPE_COLORS[t.task_type] || "#94a3b8";
+            return `<div class="task-row">
+            <div class="task-chk ${t.completed ? "done" : ""}" onclick="toggleTodayTask(${t.id}, ${t.completed})" style="cursor: pointer;">${t.completed ? "✓" : ""}</div>
             <div class="task-info">
                 <div class="task-type-s" style="color:${color}">${t.task_type}</div>
                 <div class="task-name-s">${t.task_name}</div>
             </div>
         </div>`;
-    }).join('');
-}
+          })
+          .join("");
+      }
 
-/* AI TIP */
-function loadTip() {
-    document.getElementById('aiTip').innerText = TIPS[new Date().getDay() % TIPS.length];
-}
+      /* AI TIP */
+      function loadTip() {
+        document.getElementById("aiTip").innerText =
+          TIPS[new Date().getDay() % TIPS.length];
+      }
 
-/* LOAD ALL */
-function loadAll() {
-    fetch('/get-user-stats')
-        .then(r => r.json())
-        .then(d => { if (!d.error) { updateXpUI(d.total_xp || 0); document.getElementById('pb-xp').innerText = d.total_xp || 0; } })
-        .catch(console.error);
+      /* LOAD ALL */
+      function loadAll() {
+        fetch("/get-user-stats")
+          .then((r) => r.json())
+          .then((d) => {
+            if (!d.error) {
+              updateXpUI(d.total_xp || 0);
 
-    fetch('/get-dashboard')
-        .then(r => r.json())
-        .then(data => {
-            buildXpChart(data);
-            loadPersonalBests(data);
+              // Store stats for achievements
+              window.userStats = d;
+            }
+          })
+          .catch(console.error);
+
+        fetch("/get-dashboard")
+          .then((r) => r.json())
+          .then((data) => {
             loadGoals(data);
-        })
-        .catch(console.error);
+          })
+          .catch(console.error);
 
-    fetch('/get-planned-tasks')
-        .then(r => r.json())
-        .then(tasks => {
+        fetch("/get-planned-tasks")
+          .then((r) => r.json())
+          .then((tasks) => {
             loadWeekCircles(tasks);
             loadTodayTasks(tasks);
-        })
-        .catch(console.error);
-}
 
-setGreeting();
-loadMood();
-loadTip();
-buildHeatmap();
-loadAll();
-setInterval(loadAll, 10000);
-</script>
-</body>
+            // Count completed today for achievements
+            const todayIdx =
+              new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+            const todayTasks = tasks.filter((t) => t.day === todayIdx);
+            const completedToday = todayTasks.filter((t) => t.completed).length;
+            window.tasksCompletedToday = completedToday;
+          })
+          .catch(console.error);
+
+        // Get today's hydration and load achievements
+        fetch("/get-today-hydration")
+          .then((r) => r.json())
+          .then((hydration) => {
+            const stats = window.userStats || {};
+            stats.today_hydration = hydration.total_ml;
+            stats.tasks_completed = window.tasksCompletedToday || 0;
+            stats.week_completed = 0;
+            loadAchievements(stats);
+          })
+          .catch(console.error);
+      }
+
+      setGreeting();
+      loadMood();
+      loadTip();
+      loadAll();
+      setInterval(loadAll, 10000);
+    </script>
+  </body>
 </html>
